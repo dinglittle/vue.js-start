@@ -2,22 +2,26 @@
 
 <head>
     <title>vue2.0-基础</title>
+    <meta charset="utf-8">
     <script src="vue.js"></script>
     <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
     <style>
-        li p:nth-child(1){
+        li p:nth-child(1) {
             font-size: 30px;
-            color:black;
+            color: black;
         }
-        .static{
-            font-size:20px;
+        
+        .static {
+            font-size: 20px;
             font-weight: bold;
         }
-        .active{
+        
+        .active {
             color: green;
         }
-        .text-danger{
+        
+        .text-danger {
             color: rebeccapurple;
             font-size: 20px;
             font-weight: bold;
@@ -29,7 +33,9 @@
             template: '<div style="color:green">全局组件</div>'
         })
 
-        var data = { counter: 0 }
+        var data = {
+            counter: 0
+        }
     </script>
     <script>
         //注意  这里 要放在 DOM 渲染完毕之后
@@ -44,38 +50,60 @@
                     message: 'Hello Vue!',
                     message2: '页面加载于' + new Date(),
                     message3: '页面加载毫秒数' + Date.now(),
-                    filterMessage:'my name is ',
+                    filterMessage: 'my name is ',
                     filterNum: 100,
                     seen: true,
-                    url:'http://www.baidu.com',
-                    todos: [
-                        { text: '学习 javascript' },
-                        { text: '学习 vue' },
-                        { text: '学习...' },
-                        { text: '学习...' }
-                    ],
+                    url: 'http://www.baidu.com',
+                    todos: [{
+                        text: '学习 javascript'
+                    }, {
+                        text: '学习 vue'
+                    }, {
+                        text: '学习...'
+                    }, {
+                        text: '学习...'
+                    }],
                     myHtml: '<button>myButton</button>',
-                    question:'',
-                    answer:'I cannot give you an answer until you ask a quersiotn!',
-                    isActive:true,
-                    hasError:true,
-                    classObj:{
-                        active:true,
-                        'text-danger':false
+                    question: '',
+                    answer: 'I cannot give you an answer until you ask a quersiotn!',
+                    isActive: true,
+                    hasError: true,
+                    classObj: {
+                        active: true,
+                        'text-danger': false
                     },
                     // class 与 style 数组语法
-                    activeClass:'active',
-                    errorClass:'text-danger',
+                    activeClass: 'active',
+                    errorClass: 'text-danger',
                     // 绑定内联样式
-                    activeColor:'red',
-                    fontSize:30,
+                    activeColor: 'red',
+                    fontSize: 30,
                     // 绑定内联样式  直接绑定一个对象
-                    styleObject:{
-                        color:'red',
-                        fontSize:'13px'
+                    styleObject: {
+                        color: 'red',
+                        fontSize: '13px'
                     },
                     // v-if
-                    ok:true
+                    ok: true,
+                    numbers: [1, 2, 3, 4, 5,],
+                    // 复选框
+                    // 复选框的使用，model数据不能用 ''初始化，否则会返回 true false
+                    checkedNames:[],
+                    // 单选按钮
+                    picked:'',
+                    // 选择列表
+                    selected:'',
+                    // 多选列表
+                    selected1:[],
+                    // 动态渲染
+                    selected2:'',
+                    options:[
+                        {text:'one',value:'A'},
+                        {text:'two',value:'B'},
+                        {text:'three',value:'C'}
+                    ],
+                    // 绑定value
+                    toggle:''
                 },
                 // 方法
                 methods: {
@@ -86,27 +114,36 @@
                     // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
                     // ajax请求直到用户输入完毕才会发出
                     // 学习更多关于 _.debounce function (and its cousion _.throttle ), 参考: https://loadsh.com/docs#debounce
-                    getAnswer:_.debounce(
-                        function(){
+                    getAnswer: _.debounce(
+                        function () {
                             var vm = this
                             //检测  输入的 question 中是否有指定字符 ， 返回 -1 则是没有 ， 直接 return 
-                            if(this.question.indexOf('a')=== -1 ){
+                            if (this.question.indexOf('a') === -1) {
                                 vm.answer = "Question usually contain a question mark.;"
                                 return
                             }
                             //假如 输入的 question 中有指定字符 ，开始搜索 ， 返回结果
                             vm.answer = "Thinking ..."
                             axios.get('https://yesno.wtf/api')
-                            .then(function(response){
-                                vm.answer = _.capitalize(response.data.answer)
-                            })
-                            .catch(function(error){
-                                vm.answer = "Error! Could not reach the API." + error
-                            })
+                                .then(function (response) {
+                                    vm.answer = _.capitalize(response.data.answer)
+                                })
+                                .catch(function (error) {
+                                    vm.answer = "Error! Could not reach the API." + error
+                                })
                         },
                         //这是我们为用户停止输入等待的毫秒数
                         500
-                    )
+                    ),
+                    even: function (number) {
+                        return number.filter(function (number) {
+                            return number % 2 === 0;
+                        })
+                    },
+                    // capture 事件，在捕获阶段还是在冒泡阶段监听
+                    callBack(evnet) {
+                        alert(event);
+                    }
                 },
                 //组件  局部注册
                 components: {
@@ -131,28 +168,44 @@
                         }
                     },
                     // 样式绑定下的 组件
-                    'my-compent':{
-                        template:'<div class="normal">hi i am  compent</div>'
-                    }
-                    
+                    'my-compent': {
+                        template: '<div class="normal">hi i am  compent</div>'
+                    },
+                    // 子组件  使用prop 传递数据
+                    'child':{
+                        // 声明 props
+                        props:['message'],
+                        // 就像 data 一样，prop 可以用在模板内
+                        // 同样也可以在 vm 实例中像 'this.message' 这样使用
+                        template:'<span>{{message}}</span>'
+                    },
+                    // 驼峰式 命名 child2
+                    'child2':{
+                        // camelCase in JavaScript
+                        props:['myMessage'],
+                        template:'<span>{{myMessage}}</span>'
+                    },
+                    // 动态 Prop
+
+
                 },
                 //过滤器
-                filters:{
+                filters: {
                     // 自定义的过滤器
-                    capitalize: function(value){
+                    capitalize: function (value) {
                         //假如没有 则返回 ''
-                        if(!value) return ''
+                        if (!value) return ''
                         //转换成字符串
                         value = value.toString()
                         //将首字符 转换 拼接后面的返回
-                        return value.charAt(0).toUpperCase()+value.slice(1)
+                        return value.charAt(0).toUpperCase() + value.slice(1)
                     },
-                    lower:function(value){
-                        if(!value) return ''
+                    lower: function (value) {
+                        if (!value) return ''
                         value = value.toString()
-                        return value.charAt(0).toLowerCase()+value.slice(1)
+                        return value.charAt(0).toLowerCase() + value.slice(1)
                     },
-                    filterA:function(value1, value2,value3){
+                    filterA: function (value1, value2, value3) {
                         console.log(typeof value1, typeof value2);
                         console.log(value2);
                         console.log(parseInt(value3));
@@ -165,48 +218,53 @@
                 //只要我们重新渲染， method 调用总会执行该函数
                 //为什么要缓存？ 假设我们有一个性能开销比较大的计算属性A ， 它需要遍历一个极大的数组和做大量的计算 。然后我们可能有其他的计算属性依赖于A，
                 //如果没有缓存， 我们将不可避免的多次执行 A 的 getter ! 如果希望有缓存 ， 请用 methods 替代。
-                computed:{
+                computed: {
                     //a computed getter
                     // console.log(vm.reversedMessage)
                     // vm.message = 'GoodBye'
                     // console.log(vm.reversedMessage)
-                    reversedMessage2:function(){
+                    reversedMessage2: function () {
                         //this points to vem instance
                         return this.message.split('').reverse().join('')
                     },
-                    now:function(){
+                    now: function () {
                         return Date.now();
                     },
                     //计算 setter
                     //计算属性默认只有 getter ，不过在需要时你也可以提供一个 setter
-                    fullName:{
+                    fullName: {
                         //getter
-                        get:function(){
+                        get: function () {
                             return this.firstName + '' + this.lastName
                         },
                         //setter
-                        set:function(newValue){
+                        set: function (newValue) {
                             var naems = newValue.split('');
                             this.firstName = names[0]
-                            this.lastName = names[names.length-1]
+                            this.lastName = names[names.length - 1]
                         }
                         //现在在运行 vm.fullName = 'John Doe' 时， setter 会被调用 ， vm.firstName 和 vm.lastName 也相应也会被更新
                     },
                     // 绑定 样式 计算属性
-                    classObject:function(){
+                    classObject: function () {
                         return {
                             active: this.isActive && !this.error,
-                            'text-danger':this.error && this.error.type === 'fatal'
+                            'text-danger': this.error && this.error.type === 'fatal'
                         }
+                    },
+                    evenNumbers: function () {
+                        return this.numbers.filter(function (number) {
+                            return number % 2 === 0;
+                        })
                     }
 
                 },
                 // 观察 Wathcers
                 // 虽然计算属性在大多数情况下更合适 ， 但有时也需要一个自定义的watcher 。 这是为什么 Vue 提供一个更通用的方法通过 watch 选项 ，来响应数据的变化 。 
                 // 当你想要在数据变化响应时， 执行异步操作或开销较大的操作， 这是很有用的。
-                watch:{
+                watch: {
                     //如果 question 发生改变， 这个函数就会执行
-                    question:function(newQuestion){
+                    question: function (newQuestion) {
                         this.answer = "Waiting for you to stop typing..."
                         this.getAnswer()
                     }
@@ -218,8 +276,6 @@
 
 <body>
     <div id="app">
-
-
         <ul>
             <li>
                 <!-- v-once 指令 , 只执行一次 -->
@@ -253,9 +309,7 @@
                 <a v-bind:href="url">百度</a>
                 <!-- v-if 条件与循环-->
                 <p v-if="seen">v-if 现在你看到我了</p>
-
             </li>
-
             <li>
                 <!-- v-for 循环 -->
                 <ul>
@@ -267,7 +321,7 @@
             </li>
             <li>
                 <!-- v-on 绑定事件
-            	    @click:"show()"   等价于  v-on:click="show()"
+                    @click:"show()"   等价于  v-on:click="show()"
 
                     它们看起来可能与浦头的HTML略有不同 , 但 : 与 @ 对于属性名来说都是合法字符 , 在所有支持 Vue.js 的浏览器都能被正确的计息. 
                     而且, 它们不会出现在最终渲染的标记. 缩写语法是完全可选的 
@@ -293,16 +347,13 @@
                 </ul>
             </li>
             <li>
-
             </li>
             <li>
                 <p style="color:red">过滤器</p>
-                <p>vue.js允许自定义过滤器，可被用作一些常见的文本格式化。过滤器可以用在两个地方: mustache 插值 和 v-bind 表达式.
-                过滤器应该被添加在 JavaScript 表达式的尾部, 有'管道'符指示:</p>
+                <p>vue.js允许自定义过滤器，可被用作一些常见的文本格式化。过滤器可以用在两个地方: mustache 插值 和 v-bind 表达式. 过滤器应该被添加在 JavaScript 表达式的尾部, 有'管道'符指示:</p>
                 <p>
                     {{filterMessage | capitalize}}
-                    <br>
-                    {{filterMessage | capitalize | lower}}
+                    <br> {{filterMessage | capitalize | lower}}
                     <br>
                     <!-- 这里 message 将传给过滤器 作为第二个参数 , 0 表达式的值将被求值 然后传给过滤器作为第三个参数 -->
                     {{filterNum | filterA( message, 0)}}
@@ -326,16 +377,15 @@
             </li>
             <li>
                 <p>Class 与 Style 绑定</p>
-                数据绑定一个常见需求就操作元素的 class 列表和它的内联样式 。 因为它们都是属性，我们要以用 v-bind 处理它们：只需要计算出表达式最终的字符串。 
-                不过，字符串拼接麻烦又易错。因此在 v-bind 用于 class 和 style 时， Vue.js 专门增强了它。表达式的结果类型除了字符串之外，还可以是对象或数组。
-                
+                数据绑定一个常见需求就操作元素的 class 列表和它的内联样式 。 因为它们都是属性，我们要以用 v-bind 处理它们：只需要计算出表达式最终的字符串。 不过，字符串拼接麻烦又易错。因此在 v-bind 用于 class 和 style
+                时， Vue.js 专门增强了它。表达式的结果类型除了字符串之外，还可以是对象或数组。
                 <p>-绑定 HTML Class</p>
                 我们可以传给 v-bind:class 一个对象 ，以动态切换 class
                 <span>
                     '<'div v-bind:class="{active:isActive}"'></'div'>'
                 </span>
                 <div v-bind:class="{active:isActive}">active:isActive ---<span v-html="isActive"></span> </div>
-                <p>上面的语法表示 class active 的更新  将取决于数据属性 isActive 是否为 真值</p>
+                <p>上面的语法表示 class active 的更新 将取决于数据属性 isActive 是否为 真值</p>
                 <p>我们也可以在对象中传入更多属性来动态切换多个class 。 此外 ，v-bind:class 指令可以与普通的 class 属性共存。 </p>
                 <div class="static" v-bind:class="{active:!isActive, 'text-danger':hasError }">text-danger:hasError ---<span v-html="hasError"></span> </div>
                 当 isActive 或者 hasError 变化时， class 列表将相应地更新。例如 ， 如果 hasError 的值为 true, class列表将变为 'static active text-danger'
@@ -356,12 +406,11 @@
                 <p>-用在组件上</p>
                 <!-- 在定制组件时 我们会 给组件 绑定样式 ， 但是这样 当我们需要 再添加样式时 就会很麻烦 ， 所以就要能过 样式绑定 的其他方式-->
                 <my-compent v-bind:class="{active:isActive}">my-compent</my-compent>
-                
                 <!-- 绑定内联样式 -->
                 <p>-绑定内联样式</p>
                 <p>对象语法</p>
                 v-bind:style 的对象方法十分直观-- 看着像CSS， 其实是一个JavaScript 对象 。 CSS 属性名可以用驼峰式 (camelCase) 或 短横分隔命名 (kebab-case):
-                <div v-bind:style="{color: activeColor, fontSize: fontSize + 'px'}">color: activeColor, fontSize: fontSize:fontSize  + 'px'</div>
+                <div v-bind:style="{color: activeColor, fontSize: fontSize + 'px'}">color: activeColor, fontSize: fontSize:fontSize + 'px'</div>
                 直接绑定到一个样式对象通常更好， 让模板更清晰
                 <div v-bind:style="styleObject">v-bind:style="styleObject"</div>
                 同样的，对象语法常常结合返回对象的计算属性使用
@@ -377,81 +426,585 @@
                 在字符串模板中， 如 Handlebars ， 我们得像这样写一个条件块：
                 <h1 v-if="ok">Yes</h1>
                 <h1 v-else>No</h1>
-
                 <!-- template 中 v-if 条件组 -->
-                <p>--'<'template'>'' 中 v-if 条件组</p>
-                因为 v-if 是一个指令，需要将它添加到一个元素上。 但是如果我们想切换多个元素呢？ 此时我们可以把一个 '<'template'>'' 元素当做包装元素，并在上面使用 v-if。
-                最终的渲染结果不会包含　'<'template'>'' 元素。
-                <template v-if="ok">
-                    <h1>Title</h1>
-                    <p>Paragraph 1</p>
-                    <p>Paragraph 2</p>
-                </template>
-                <p>--v-else</p>
-                你可以使用 v-else 指令来表示 v-if 的 "else" 块
-                <div v-if="Math.random() > 0.5">
-                    Now you see me 
+                <p>--'
+                    < 'template'>'' 中 v-if 条件组</p>
+                因为 v-if 是一个指令，需要将它添加到一个元素上。 但是如果我们想切换多个元素呢？ 此时我们可以把一个 '
+                < 'template'>'' 元素当做包装元素，并在上面使用 v-if。 最终的渲染结果不会包含　'
+                    < 'template'>'' 元素。
+                        <template v-if="ok">
+                            <h1>Title</h1>
+                            <p>Paragraph 1</p>
+                            <p>Paragraph 2</p>
+                        </template>
+                        <p>--v-else</p>
+                        你可以使用 v-else 指令来表示 v-if 的 "else" 块
+                        <div v-if="Math.random() > 0.5">
+                            Now you see me
+                        </div>
+                        <div v-else>
+                            Now you don't
+                        </div>
+                        <p>--v-else-if</p>
+                        2.1.0新增 v-else-if , 顾名思议， 充当 v-if 的 "else-if" 块。 可以链式地使用多次:
+                        <div v-if="type ==='A'">
+                            A
+                        </div>
+                        <div v-else-if="type ==='B'">
+                            B
+                        </div>
+                        <div v-else-if="type ==='C'">
+                            C
+                        </div>
+                        <div v-else>
+                            Not A/B/C
+                        </div>
+                        <p>--用 key 管理可复用的元素</p>
+                        Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做，除了使 Vue 变得非常快之外，还有一些有用的好处。 例如，如果你允许用户在不同的登录方式之间切换：
+                        <br>
+                        <template v-if="loginType === 'username'">
+                            <label>Username</label>
+                            <input placeholder="Enter your username">
+                        </template>
+                        <template v-else>
+                            <label>Email</label>
+                            <input placeholder="Enter your email address">
+                        </template>
+                        那么在上面的代码中切换 loginType 将不会消除用户已经输入的内容。因为两个模板使用了相同的元素， input 不会被替换掉--仅仅是替换了它的 placeholder.
+                        <br> 这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来声明 “这两个元素是完全独立的--不要复用它们”。 只需添加一个具有唯一值的 key 属性即可：
+                        <br>
+                        <template v-if="loginType === 'username'">
+                            <label>Username</label>
+                            <input placeholder="Enter your username" key="username-input">
+                        </template>
+                        <template v-else>
+                            <label>Email</label>
+                            <input placeholder="Enter your email address" key="email-input">
+                        </template>
+                        <br> 这种情况，每次切换时，输入框都将被重新渲染 ， label 元素仍然会被高效 地复用，因为它们没有添加 key 属性。
+                        <!-- v-show-->
+                        <p>-v-show</p>
+                        另一个用于根据条件展示元素的选项是 v-show 指令。用法大致一样：
+                        <h1 v-show="ok">Hello!</h1> 不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中，v-show 是简单地切换元素的 CSS 属性 display。
+                        <br> 注意： v-show 不支持 template 语法 ， 也不支持 v-else.
+                        <p>v-if VS v-show</p>
+                        <p>v-if 是“真正的”条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。</p>
+                        <p>v-if 也是有<strong>惰性的：</strong>如果在初始渲染时条件为假，则什么也不做----直到条件第一次变为真时，才会开始渲染条件块。</p>
+                        <p>相对之下，v-show 就简单得多---不管初条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换</p>
+                        <p>一般来说，v-if 月更好高的切换开销，而v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-shwo 比较好; 如果在运行时条件不太可能改变，则使用 v-if 较好</p>
+                        <p>v-if 与 v-for 一起使用时，v-for 具有比 v-if 更主的优先级</p>
+            </li>
+            <li>
+                <p>列表渲染</p>
+                我们用 v-for 指令根据一组数据的选项列表进行渲染。 v-for 指令需要以 item in items 形式的特殊语法， items 是源数据数组并且 item 是数组元素迭代的别名。
+                <p>-基本用法</p>
+                <p>在 v-for 块中，我们拥有对父作用域属性的完全访问权限。 v-for 还支持一个可选 的第二个参数为当前项的索引。</p>
+                <ul>
+                    <li v-for="(item,index) in [1,2,3]">
+                        {{item + 10}}{{index}}
+                    </li>
+                    <li>也可以用 of 代替 in 作为分隔符，因为它是最接近 JavaScript 迭代器的语法：</li>
+                    <li v-for="(item,index) of [1,2,3]">
+                        {{item +10 }} {{index}}
+                    </li>
+                </ul>
+                <p>-Template v-for</p>
+                如同 v-if 模板，你也可以用带有 v-for 的 template 标签来渲染多个元素块。
+                <ul>
+                    <template v-for="item in [1,2,3,4,5]">
+                        <li>{{item}}</li>
+                    </template>
+                </ul>
+                <P>对象迭代v-for</P>
+                你也可以用v-for通过一个对象的属性来迭代
+                <ul>
+                    <li v-for="value in {name:'lwj',age:123,test:'test'}">
+                        {{value}}
+                    </li>
+                </ul>
+                <p>整数迭代 v-for</p>
+                v-for="n in 10"
+                <div>
+                    <span v-for="n in 10">{{n}}</span>
                 </div>
-                <div v-else>
-                    Now you don't
+                <p>-组件和 v-for</p>
+                <p>key</p>
+                <p>
+                    当vue.js用v-for 正在更新已渲染过的元素列表时，它默认用"就地复用"策略。如果数据项的顺序被改变，vue将不是移动DOM元素来匹配数据项的顺序，而是简单复用此处每个元素，并且确保它在特定索引下显示已被渲染过的每个元素。这个类似 vue1.x
+                    的 track-by="$index"
+                </p>
+                <p>
+                    这个默认的模式是有效的，但是适用于不依赖子组件状态或临时DOM状态（例如：表单输入值）的列表 渲染输出。
+                </p>
+                <p>
+                    为了给vue一个提示，以便它能跟踪第个节点的身份，从而重用和重新排序现有元素，你需要为每项提供一个唯一 key 属性。理想的 key 值是第期内都有唯一id。这个特殊的属性相当于 vur1.x的 tarck-by ，但它的工作方式类似于一个属性，所以你需要用
+                    v-bind 来绑定动态值（在这里使用简写)
+                </p>
+                <div v-for="item in [1,2,3]" :key="item.id">
+                    {{item}}
                 </div>
-                <p>--v-else-if</p>
-                2.1.0新增  
-                v-else-if , 顾名思议， 充当 v-if 的 "else-if" 块。 可以链式地使用多次:
-                <div v-if="type ==='A'">
-                    A
-                </div>
-                <div v-else-if="type ==='B'">
-                    B
-                </div>
-                <div v-else-if="type ==='C'">
-                    C
-                </div>
-                <div v-else>
-                    Not A/B/C
+                <p>建议尽可能使用 v-for 来提供 key，除非迭代DOM内容足够简单，或者你是故意要依赖于默认行为来获得性能提升。 因为它是vue识别节点的一个通用机制，key并不特别于 v-for 关联，key 还具有其他用途</p>
+
+
+                <p>-数组更新检测</p>
+                <p>变异方法 </p>
+                vue包含一组观察数组的变异方法 ，所以它们也将会触发视图更新。这些方法如下：
+                <ul>
+                    <li v-for="item in ['push()','pop()','shift()','unshift()','sort()','reverse()']">{{item}}</li>
+                </ul>
+
+                <p>-生塑数组</p>
+                变异方法 (nutaion method),顾名思义，会改变被这些方法调用的原始数组。相比之下，也有非变异(no-mutaiong method)方法，例如： filter() , concat(), slice() 。这些不会改变原始数组，介总是返回返回一个新数组。当使用非变异方法时，可以用新数组替换旧数组：
+                example1.items = example1.items.filter(function(item){ return item.message.match(/Foo/) }) 你可以认为这将导致 vue
+                丢弃现有 DOM ua 重新渲染整个列表。幸运的是，事实并非如此。vue 实现了一些智能启发式方法来最大化DOM元素重用，所以用一个含有相同元素的数组去替换原来的数组是非常高效的操作。
+
+                <p>-显示过滤/排序结果</p>
+                有时，我们想要显示一个数组的过滤或排序副本，而不实际改变或重置原始数据。 在这种情况下，可以创建返回过滤或排序数组的计算属性。
+                <li v-for="n in evenNumbers">{{n}}</li>
+
+                或者，你也可以在计算属性不适用的情况下（例如，在嵌套 v-for 循环中）使用method 方法
+                <li v-for="n in even(numbers)">{{n}}</li>
+            </li>
+            <li>
+                <p>事件处理器</p>、
+                <p>-监听事件</p>
+                可以用 v-on 指令监听 DOM 事件来触发一些 JavaScript 代码。
+                <div id="example-1">
+                    <<button v-on:click="counter+=1">增加1</button>
+                        <p>这个按钮被点击了{{counter}}次</p>
                 </div>
 
-                <p>--用 key 管理可复用的元素</p>
-                Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。这么做，除了使 Vue 变得非常快之外，还有一些有用的好处。
-                例如，如果你允许用户在不同的登录方式之间切换：
-                <br>
-                <template v-if="loginType === 'username'">
-                    <label>Username</label>
-                    <input placeholder="Enter your username">
-                </template>
-                <template v-else>
-                    <label>Email</label>
-                    <input placeholder="Enter your email address">
-                </template>
-                那么在上面的代码中切换 loginType 将不会消除用户已经输入的内容。因为两个模板使用了相同的元素， input 不会被替换掉--仅仅是替换了它的 placeholder.
-                <br>
-                这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来声明 “这两个元素是完全独立的--不要复用它们”。 只需添加一个具有唯一值的 key 属性即可：
-                <br>
-                <template v-if="loginType === 'username'">
-                    <label>Username</label>
-                    <input placeholder="Enter your username" key="username-input">
-                </template>
-                <template v-else>
-                    <label>Email</label>
-                    <input placeholder="Enter your email address" key="email-input">
-                </template>
-                <br>
-                这种情况，每次切换时，输入框都将被重新渲染 ， label 元素仍然会被高效 地复用，因为它们没有添加 key 属性。
+                <p>-方法事件处理器</p>
+                许多事件处理的逻辑都很复杂，所以直接把 javascript 代码写在 v-on 指令中是不可行的。因此 v-on 可以接收一个定义的方法来调用。
+                <p>
+                    button v-on:click="greet"
+                </p>
+                <p>
+                    button @click="greet"
+                </p>
 
-                <!-- v-show-->
-                <p>-v-show</p>
-                另一个用于根据条件展示元素的选项是 v-show 指令。用法大致一样：
-                <h1 v-show="ok">Hello!</h1>
-                不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中，v-show 是简单地切换元素的 CSS 属性 display。
-                <br>
-                注意： v-show 不支持 template 语法 ， 也不支持 v-else.
+                <p>-内联处理器方法</p>
+                除了直接绑定到一个方法，也可以用内联JavaScript语句
+                <p>v-on:click="say('hi')"</p>
+                <p>@click:say('hi')</p>
+                <p>有时候也需要在内联语句处理器中访问原生 DOM 事件。可以用特殊变量 <span style="color:orange">$evnet</span> 把它传入方法</p>
 
-                <p>v-if VS v-show</p>
+                <p>-事件修饰符</p>
+                在事件处理器程序中调用 <span style="color:orange">event.preventDefault()</span> 或 <span style="color:orange">event.stopPropagation()</span>                是非常常见的需求。 尽管我们可以在 methods 中轻松实现这点，但更好的方式是: methods 只有纯粹的数据逻辑，而不是去处理DOM事件细节。 为了解决这个问题， Vue.js 为 v-on 提供了 事件修饰符。通过由点
+                (.) 表示的指令后缀来调用修饰符。
+                <ul>
+                    <li>.stop</li>
+                    <li>.prevent</li>
+                    <li>.capture</li>
+                    <li>.self</li>
+                    <li>.once</li>
+                    <br><br><br>
+                    <li>阻止单击事件冒泡</li>
+                    <li> a v-on:click.stop="doThis" </li>
+                    <br>
+                    <li>提交事件不再重载页面</li>
+                    <li>form v-on:sumit.prevent="onSubmit" </li>
+                    <br>
+                    <li>修饰符可以串联</li>
+                    <li> a v-on:click.stop.prevent="doThat"</li>
+                    <br>
+                    <li>只有修饰符</li>
+                    <li>form v-on:submit.prevent</li>
+                    <br>
+                    <li>添加事件侦听器时使用事件捕获模式</li>
+                    <li>div v-on:click.capture="doThis"</li>
+                    <button @click="callBack($event)">默认冒泡阶段</button>
+                    <button @click="callBack.capture($event)">捕获阶段</button>
+                    <br>
+                    <li>只当事件在该元素本身（而不是子元素）触发时触发回调</li>
+                    <li>div v-on:click.self="doThat"</li>
+                    <br>
+                    <p>点击事件将只会触发一次</p>
+                    <p>a v-on:click.once="doThis" </p>
+                    <button @click.once="callBack($event)">once只执行一次</button>
+                    <button v-on:click.once="callBack($event)">once只执行一次</button>
+
+                </ul>
+                <p>-按键修饰符</p>
+                在监听键盘事件时，我们经常把需要监测常见的键值。vue允许为 v-on 在监听键盘事件时添加按键修饰符：
+                <p>只有在 keyCode 是 13 时调用 vm.submit()</p>
+                <p> input v-on:keyup.13 = "submit"</p>
+                <input v-on:keyup.13="submit">
+                <p>记住所有的 keyCode 比较困难，所以 vue 为最常用的按键提供了别名：</p>
+                <p> input v-on:keyup.enter="submit"</p>
+                <input v-on:key.enter="submit">
+                <p>缩写语法</p>
+                <p>input @keyup.enter="submit"</p>
+                <input @keyup.enter="submit">
+
+                <ul>
+                    <li>.enter</li>
+                    <li>.tab</li>
+                    <li>.delete(捕获“删除”和“退格”键)</li>
+                    <li>.esc</li>
+                    <li>.space</li>
+                    <li>.up</li>
+                    <li>.down</li>
+                    <li>.left</li>
+                    <li>.right</li>
+                </ul>
+                <p>可以通过全局 config.keyCodes 对象 算定义按键修饰符别名：</p>
+                //可以使用 v-on:keyup.f1
+                <p>vue.config.keyCodes.f1=112;</p>
+
+                <p>2.1.0 新增</p>
+                可以用如下修饰符开启鼠标或键盘事件监听，使在按键按下时发生响应。
+                <ul>
+                    <li>.ctrl</li>
+                    <li>.alt</li>
+                    <li>.shift</li>
+                    <li>.meta</li>
+                </ul>
+                注意：在Mac系统键盘上，meta对应命令键（##）。在windows系统键盘meta对应windows微标键（田）。在Sun操作系统键盘上，meta对应实心宝石键（。）
+                <p> Alt+C </p>
+                <p>input @keyup.alt.67 = "clear"</p>
+                <!-- c: 67 -->
+                <input @keyup.alt.67="clear">
+                <p> Ctrl+Click </p>
+                <p> div @click.ctrl="doSomething"</p>
+                <div @click.ctrl="doSomething">Do something</div>
+
+                <p>为什么在HTML中监听事件</p>
+                你可以注意到这种事件监听的方式违背了关注点分离 (sparation of concern) 传统理念。 不必担心，因为所有的vue.js事件处理方式和表达式都严格绑定在当前视图的 viewModel 上，它不会导致任何维护上的困难。 实际上，使用
+                v-on 有几个好处： 1.扫一眼 HTML 模板便能轻松在 JavaScript 代码里对应的方法。 2.因为你无须在 JavaScript 里手动绑定事件，你的 ViewModel 代码可以是非常纯粹的逻辑，和
+                DOM 完全解耦，更易于测试。 3.当一个 ViewModel 被销毁时，所有的事件处理器都会自动被删除。你无须担心如何自己清理它们。
+            </li>
+
+            <li>
+                <p>表单控件绑定</p>
+                <p>-基础用法</p>
+                你可以用 v-model 指令在表单控件元素上创建双向数据绑定。它会根据控件类型自动选取正确的方法来更新元素。 尽管有些神奇，但 v-model 本质上不过是语法糖，它负责监听用户的输入事件以更新数据，并特别处理一些极端的例子。
+                <p>v-model 并不关心表单控件初始化所生成的值。因为它会选择 vue 实例数据来作为具体的值</p>
+                对于要求 IME (如中文、日语、韩语等)的语言，你会发现那 v-model 不会在 ime 构成中得到更新。如果你也想实现更新，请使用 input 事件。可以用input事件。
+                <br>
+                <p>文本</p>
+                <p>这里注意：要使用 model , 变量必须先定义</p>
+                <p>input v-model="message" placeholder="edit me"</p>
+                <p>Message is: {{message4}}</p>
+                <input v-model="message4" placeholder="edit me"> Message is:{{message4}}
+
+
+                <p>-多行文本</p>
+                <span>Multiline message is :</span>
+                <p style="white-space:pre">{{message}}</p>
+                <!-- 
+                    cols:每行字符
+                    row:多少行
+                -->
+                <textarea v-model="message" id="" cols="30" rows="10"></textarea>
+
+
+                <p>-复选框</p>
+                <input type="checkbox" id="checkbox" v-model="checked">
+                <label for="checkbox">{{checked}}</label>
+
+                <br>
+                多个勾选框，绑定到同一个数组：
+                <input type="checkbox" id="jack" value="jack" v-model="checkedNames">
+                <label for="jack">jack</label>
+                <input type="checkbox" id="john" value="john" v-model="checkedNames">
+                <label for="john">john</label>
+                <input type="checkbox" id="mike" value="mike" v-model="checkedNames">
+                <br>    
+                <span>Checked names:{{checkedNames}}</span>
+
+                <p>-单选按钮</p>
+                <div id="example-4" class="demo">
+                    <input type="radio" id="one" value="one" v-model="picked">
+                    <label for="one">one</label>
+                    <br>    
+                    <input type="radio" id="two" value="two" v-model="picked">  
+                    <label for="two">two</label>
+                    <br>
+                    <br>
+                    <span>Picked: {{picked}}</span>
+                </div>
+
+                <p>-选择列表</p>
+                <div  id="example-5" class="demo">
+                    <select v-model="selected">
+                        <option> A</option>
+                        <option> B</option>
+                        <option> C</option>
+                    </select>
+                    <span>Selected: {{selected}}</span>
+                </div>
+
+                <p>-多选列表（绑定到一个数组）</p>
+                <div id="example-6" class="demo">
+                    <select v-model="selected1" multiple >
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                    <br>
+                    <span>Selected: {{selected1}}</span>
+                </div>
+
+                <p>-动态选项，用 v-for 渲染</p>
+                <select v-model="selected2">
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{option.text}}
+                    </option>
+                </select>
+                <span>Selected2:{{selected2}}</span>
+
+
+                <p>-绑定value</p>
+                对于单选按钮，勾选框及选择 列表选项，v-model 绑定的 value 通常是静态字符串(对于勾选框是逻辑值)
+                <!-- 当选中时，'picked' 为字符串 'a' -->
+                <input type="radio" v-model="picked" value="a">
+                <!-- toggle 为 true 或 false -->
+                <input type="checkbox" v-model="toggle">
+                <!-- 当选中时，'selected' 为字符串 'abc'-->
+                <select  v-model="selected3">
+                    <option value="abc">ABC</option>
+                </select>
+                但是有时我们想绑定 value 到 vue 实例的一个动态属性上，这时要以用 v-bind 实现，并且这个属性的值可以不是字符串
+
+
+                <p>-复选框</p>
+                <input 
+                    type="checkbox" 
+                    v-model="toggle"
+                    v-bind:true-value="a"
+                    v-bind:false-value="b"
+                >
+                <!-- 
+                    当选中时，
+                    vm.toggle === vm.a
+                    vm.toggle === vm.b
+                -->
+
+                <p>-单选按钮</p>
+                <input type="radio" v-model="pick" v-bind:value="a">
+                <!-- 当选中时  vm.pick ===vm.a  -->
+
+                <p>-选择列表设置</p>
+                <select v-model="selected4" >
+                    <!-- 内联对象字面量 -->
+                    <option v-bind:value="{number:123}">123</option>
+                </select>
+                <!--
+                    当选中时
+                    typeof vm.selected // ->'object'
+                    vm.selected.number // -> 123
+                -->
+
+
+                <p>-修饰符</p>
+                <p>#.lazy</p>
+                在默认情况下，v-model 在 input 事件中同步输入框的值与数据（除了 上述  IME 部分）,但你可以添加一个修饰符 lazy,从而转变为在 change 事件中同步
+                <!-- 在"change" 而不是"input" 事件中更新 -->
+                <input v-model.lazy="msg">
+
+                <p>#.number</p>
+                如果想自动将用户的输入值转为 Number 类型（如果原值的转换结果为 NaN 则返回值），可以添加一个修饰符 number 给 v-model 来处理输入值：
+                <input v-model.number="age" type="number">
+
+                <p>#.trim</p>
+                如果要自动过滤用户输入的首尾空格，可以添加 trim 修饰符到 v-model 上过滤输入：
+                <input v-model.trim="msg">
+
+                <p><span style="color:orange;font-weight: bold;font-size:30px;">-v-model</span><span style="font-size:30px;font-weight: bold;">与组件</span></p>
+                HTML内建的input类型有时不能满足你的需求。还好，vue的组件系统允许你创建一个具有自定义行为可复用的input类型，这些 input 类型甚至可以和 v-model 一起使用
+            </li>
+            <li>
+                <p>组件</p>
+                <p>-什么是组件</p>
+                组件（component）是vue.js最强大的功能之一。组件可以扩展HTML元素，封装可重用的代码。在较高层面上，组件是自定义元素，vue.js的编译器为添加特殊功能。
+                在有些情况下，组件可以是原生HTML元素的形式，以js特性扩展。
+
+                <p>-使用组件</p>
+                <p>#注册</p>
+                <textarea cols="30" row="10">
+                    <p>new Vue({</p>
+                    <p>     el:'#some-element',</p>
+                    <p>     //选项</p>
+                    <p>     })</p>
+                </textarea>
+
+                要注册一个全局组件，你可以使用 vue.component(tagName , options)。例如
+                Vue.component('my-component',{   //选项   })
+
+                <p>对于自定义标签名，Vue.js不强制要求遵循 W3C 规则(小写，并且包含一个短杠),尽管遵循这个规则比较好</p>
+                组件在注册之后，便可以在父实例的模块中以自定义元素<my-component></my-component> 的形式使用。
+                要确保在初始化根实例之前注册了组件：
+                <textarea>
+                    <div id="example">
+                        <my-component></my-component>
+                    </div>
+                    //注册
+                    Vue.component('my-component',{
+                        template:'<div>A cumstom component!</div>'
+                    })
+                    //创建实例
+                    new Vue({
+                        el:'#example'
+                    })
+
+                    渲染为：
+                    <div id="example">
+                        <div>A cumstom component!</div>
+                    </div>
+                </textarea>
+
+                <p>#局部注册</p>
+                <p>不必在全局注册每个组件。通过使用组件实例选项注册，可以使组件仅在另一个实例/组件的作用域中可用：</p>
+
+                <textarea name="" id="" cols="30" rows="10">
+                    var Child={
+                        template:'<div> A cumstom component!</div>'
+                    }
+
+                    new Vue({
+                        //...
+                        components:{
+                            <!--
+                                <my-componet> 将只在父模板可用 
+                            -->
+                            'my-component':Child
+                        }
+                    })
+                </textarea>
+                <p>这种封闭也适用于其它可注册的 Vue 功能，如指令</p>
+
+
+                <br>
+                <p>#DOM模版解析说明</p>
+                当使用DOM作为模版时（例如，将 el 选项挂载到一个已存在的元素上），你会受到HTML的一些限制，
+                因为Vue只有在浏览器解析和标准化HTML后才能获取模版内容。尤其像这些元素 ul,ol,table,select 限制了能被包裹的元素，option 只能出现在其它元素内部。
+                <br>
+                在自定义组件中使用这些受限制的元素时会导致一些问题，例如：
+                <textarea name="" id="" cols="30" rows="10">
+                    <table>
+                        <tr is="my-row"></tr>
+                    </table>
+                </textarea>
+                应该注意，如果您使用来自以下来源之一的字符串模板，这些限制将不适用。
+                <ul>
+                    <li>script type="text/x-template"</li>
+                    <li>JavaScript内联模版字符串</li>
+                    <li>.vue 组件</li>
+                </ul>
+
+                <p>#data 必须是函数</p>
+                通过vue构造器传入的各种选项大多都可以在组件里用。data是一个例外，它必须是函数。实际上，如果你这么做：
+                <textarea name="" id="" cols="30" rows="10">
+                    Vue.component('my-component',{
+                        templage:'<span>{{message}}</span>',
+                        data:{
+                            message:'hello'
+                        }
+                    })
+                </textarea>
+                <br>
+                那么 Vue 会停止，并在控制台发了警告，告诉你在组件中 data 必须是一个函数。理解这种规则的存在意义很有帮助，
+                让我们假设用如下方式来绕开Vue的警告：
+                <textarea name="" id="" cols="30" rows="10">
+                    <div id="example-2">
+                        <simple-counter></simple-counter>
+                        <simple-counter></simple-counter>
+                        <simple-counter></simple-counter>
+                    </div>
+
+
+                    var data = {counter:0}
+                    Vue.componetn('simple-counter',{
+                        template:'<button v-on:click="counter +=1">{{counter}}</button>',
+                        //技术上 data 的确是一个函数,因此 Vue 不会警告
+                        //但是我们返回给每个组件的实例却引用了同一个data对象
+                        data:fuction(){
+                            return data
+                        }
+                    })
+
+                    new Vue({
+                        el:'#example-2'
+                    })
+
+                </textarea>
+                <br>
+                由于这三个组件共享了一个data，因此增加一个counter会影响所有组件！这不对。
+                我们可以通过为每个组件返回全新的data对象来解决 这个问题：
+                <textarea name="" id="" cols="30" rows="10">
+                    data:function(){
+                        return{
+                            counter:0
+                        }
+                    }
+                </textarea>
+                <br>
+                现在每个counter都有它自己内部的状态了
+
+
+                <p>#构成组件</p>
+                组件意味着协同工作，通常父子组件会是这样的关系：组件A在它的模版中使用了组件B。它们之间必然需要相互通信：
+                父组件要给子组件传递数据，子组件需要将它内部发生的事情告知给父组件。
+                然而，在一个良好定义的接口中尽可能将父子组件解耦是很重要的。这保证了每个组件可以在相对隔离的环境中书写和理解，
+                也大幅提高了组件的可维护性和可重用性。
+
+                <br>
+                在Vue.js中，父子组件的关系可以总结为 props down , events up .父组件通过 props 向下传递数据给子组件，子组件通过events 给父组件发送消息。
                 
+                <p>#使用 Prop 传递数据</p>
+                组件实例的作用域是孤立的。这意味着不能（也不应该）在子组件的模板内直接引用父组件的数据。要让子组件使用父组件的数据，我们需要通过子组件的props 选项。
+                <br>
+                子组件要显式地用 props 选项声明它期待获得的数据
+                <textarea name="" id="" cols="30" rows="10">
+                    Vue.component('child',{
+                        //声明 props
+                        props:['message'],
+                        //就像 data 一样， prop 可以用在模板内
+                        //同样也可以在 vm 实例中像 'this.message' 这样使用
+                        template:'<span>{{message}}</span>'
+                    })
+                </textarea>
+                <br>
+                然后我们可以这样向它传入一个普通字符串：
+                <p>child message="hello" </p>
+                <child message="hello"></child>
+
+                <p>#camelCase vs . kebab-case</p>
+                HTML特性是不区分大小写的。所以，当使用的不是字符串模板，camelCase（驼峰式）命名的prop需要转换为相对应的 kebab-case（短横线隔开式）命名：
+
+                <textarea name="" id="" cols="30" rows="10">
+                    Vue.component('child',{
+                        //camelCase in JavScript
+                        props:['myMessage'],
+                        template:'<span>{{myMessage}}</span>'
+                    })
+                </textarea>
+                <!-- keybab-case in HTML -->
+                <p>child my-message="hello"</p>
+                <child2 my-message="hello2"></child2>
+
+
+
+                <p>#动态 Prop</p>
+                在模板中，要动态地绑定父组件的数据到子模板的props，与绑定到任何普通的HTML特性相类似，就要用 v-bind 。每当父组件 的数据变化时，该变化也会传导给子组件中。
+                <textarea name="" id="" cols="30" rows="10">
+                    <div>  
+                        <input v-model="parentMsg">
+                        <br>
+                        <child2 v-bind:my-message="parentMsg"></child2>
+                    </div>
+                </textarea>
+                <p>使用 v-bind 缩写语法通常更简单</p>
+                <p>child :my-message="parentMsg"</p>
+                <child2 :my-message="parentMsg"></child2>
+
+
 
             </li>
+
         </ul>
-    </div> 
+    </div>
 </body>
 
 </html>
