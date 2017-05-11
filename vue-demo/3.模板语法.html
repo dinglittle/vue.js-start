@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>3.模板语法</title>
+    <meta charset="utf-8">
+    <style type="text/css" media="screen">
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    </style>
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+    window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                msg: '一次',
+                texthtml: '<div>我是texthml</div>',
+                temp: '{{ }}',
+                seen: true,
+                value:'',
+                value2:'abcdefghijklmnopqrstuvwxyz'
+            },
+            methods: {
+                doSometing: function() {
+                    console.log("doSometing ");
+                },
+                onSubmit: function() {
+                    alert(this.value);
+                }
+            },
+            // 过滤器
+            filters:{
+            	capitalize:function(value){
+            		if(!value) return''
+            		value = value.toString()
+            		return value.charAt(0).toUpperCase() + value.slice(1)
+            	},
+            	capitalize2:function(value){
+            		if(!value) return ''
+            		value = value.toString()
+            		return value.charAt(0) + value.charAt(1).toUpperCase() + value.slice(2)
+            	},
+            	reverseStr:function(value){
+            		if(!value) return ''
+            		value = value.toString()
+            		return value.split('').reverse().join('');
+            	}
+            }
+        })
+    }
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <p>
+            <!-- v-once: 只执行一次 -->
+            <span v-once>This will never change: {{msg}}</span>
+        </p>
+        <div v-html="texthtml">
+        </div>
+        <br>
+        <div>
+            {{temp}}双大括号会将数据解释为纯文本，而非HTML {{texthtml}}
+        </div>
+        <p class="title">指令</p>
+        <p v-if="seen">Now you see me</p>
+        <p class="title">可接收参数的 指令</p>
+        <p>
+            <a v-on:click="doSometing">doSometing</a>
+        </p>
+        <p class="title">修饰符</p>
+        <p>
+            <form v-on:submit.prevent="onSubmit">
+            	<input type="text" name="" value="" v-model="value">
+                <button type="submit">submit</button>
+            </form>
+        </p>
+
+
+        <p class="title">过滤器</p>
+        <p>
+        	{{value2 | capitalize}}
+        </p>
+
+        <!-- 串联过滤器 -->
+        <p>
+        	{{value2 | capitalize | capitalize2}}
+        </p>
+        <p>
+        	{{value2 | reverseStr}}
+        </p>
+        <!-- 过滤器接受参数 -->
+        <p>
+        	{{message | filterA('arg1',arg2)}}
+        </p>
+
+        <p class="title">缩写</p>
+        <p>
+        	v-bind 缩写  v-bind:href="url"   :href="url"
+        </p>
+        <p>
+        	v-on 缩写 v-on:click       @click
+        </p>
+    </div>
+</body>
+
+</html>
