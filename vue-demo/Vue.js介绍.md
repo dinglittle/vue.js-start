@@ -1,4 +1,4 @@
-[返回首页](https://github.com/dinglittle/Vue.js-start)
+[返回首页](https://github.com/dinglittle/Vue.js-start)  [demo](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/HelloVue.html)
 
 #Vue.js是什么
 ---
