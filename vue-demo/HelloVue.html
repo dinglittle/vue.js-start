@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello Vue</title>
+	<meta charset="utf-8">
+	<style type="text/css" media="screen">
+		.title{
+			font-size: 25px;
+			font-weight: bold;
+		}
+	</style>
+	<script type="text/javascript" src="./vue.js"></script>
+	<script type="text/javascript">
+		// 页面加载完之后渲染
+		window.onload=function(){
+			// Hello Vue!
+			var app = new Vue({
+				el:'#app',
+				data:{
+					message:'Hello Vue!'
+				}
+			})
+			// 指令 v-bind
+			var app2 = new Vue({
+				el:'#app-2',
+				data:{
+					message:'页面加载于'+ Date.now()
+				}
+			})
+			// 指令 v-if
+			var app3 = new Vue({
+				el:'#app-3',
+				data:{
+					seen:true
+				}
+			})
+			// 指令 v-for
+			var app4 = new Vue({
+				el:'#app-4',
+				data:{
+					todos:[
+						{text:'学习javascritp'},
+						{text:'学习javascritp'},
+						{text:'学习javascritp'}
+					]
+				}
+			})
+			// 指令 v-on:click
+			var app5 = new Vue({
+				el:'#app-5',
+				data:{
+					message:'Hello Vue.js'
+				},
+				// 方法
+				methods:{
+					reverseMessage:function(){
+						this.message = this.message.split('').reverse().join('')
+					}
+				}
+			})
+			// 指令 v-model
+			var app6 = new Vue({
+				el:'#app-6',
+				data:{
+					message:'Hello Vue!'
+				}
+			})
+			// 组件
+			// 全局组件
+			// 这里注意  全局组件要放在 vue 实例前
+			Vue.component('todo-item',{
+				// todo-item 组件现在接受一个
+				// 'prop' , 类似一个自定义属性
+				// 这个属性名为 otdo 
+				props:['todo'],
+				template:'<li>{{todo.text}}</li>'
+			})
+			var app7 = new Vue({
+				el:'#app-7',
+				data:{
+					groceryList:[
+						{text:'apple'},
+						{text:'orange'},
+						{text:'banana'}
+					]
+				}
+			})
+			
+
+		}
+	</script>
+</head>
+<body>
+	<!-- Hello Vue! -->
+	<p class="title">--Hello Vue!</p>
+	<div id="app">
+		{{message}}
+	</div>
+	<!-- 指令 v-bind -->
+	<p class="title">--指令 v-bind</p>
+	<div id="app-2">
+		<p v-bind:title="message">
+			鼠标悬停几秒查看此处冬天绑定胡提示信息
+		</p>
+	</div>
+	<!-- 指令 v-if -->
+	<p class="title">--指令 v-if</p>
+	<div id="app-3">
+		<p v-if="seen">现在你看到我了</p>
+	</div>
+	<!-- 指令 v-for -->
+	<p class="title">--指令 v-for</p>
+	<div id="app-4">
+		<ol>
+			<li v-for="todo in todos">
+				{{todo.text}}
+			</li>
+		</ol>
+	</div>
+	<!-- 指令 v-on:click -->
+	<p class="title">--指令 v-on:click</p>
+	<div id="app-5">
+		<p>{{message}}</p>
+		<button v-on:click="reverseMessage">逆转消息</button>
+	</div>
+	<!-- 指令 v-model -->
+	<p class="title">--指令 v-model</p>
+	<div id="app-6">
+		<p>{{message}}</p>
+		<input v-model="message">
+	</div>
+	<!-- 组件 -->
+	<p class="title">--组件</p>
+	<div id="app-7">
+		<todo-item v-for="item in groceryList" v-bind:todo='item'></todo-item>
+	</div>
+</body>
+</html>
