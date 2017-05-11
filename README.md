@@ -6,11 +6,16 @@
 
 --[Vue实例](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/2.Vue%E5%AE%9E%E4%BE%8B.md)
 
+--[模板语法](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/3.%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95.md)
+
 二) [Vue.js 语法练习](https://github.com/dinglittle/Vue.js/blob/master/vue%E5%9F%BA%E7%A1%80.html)
 
 --[Hello Vue.js](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/1.HelloVue.html)
 
 --[Vue实例](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/2.Vue%E5%AE%9E%E4%BE%8B.html)
+
+--[模板语法](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/3.%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95.html)
+
 
 --[自定义事件](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.html)
           
