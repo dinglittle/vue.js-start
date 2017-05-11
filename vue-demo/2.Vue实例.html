@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>2.Vue实例</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="./vue.js"></script>
+	<script type="text/javascript">
+		window.onload=function(){
+			var data = {a:1}
+			var vm = new Vue({
+				el:'#app',
+				data:data,
+				// created 阶段
+				created:function(){
+					//'this' 指向 vm 实例
+					console.log('a is:' + this.a)
+				}
+			})
+			data.a = 2;
+			vm.a = 3;
+
+			vm.$watch('a',function(newVal ,oldVal){
+				console.log('a is changed')
+			})
+			vm.a = 4;
+		}
+	</script>
+</head>
+<body>
+	<div id="app">
+		<p>{{a}}</p>
+	</div>
+</body>
+</html>
