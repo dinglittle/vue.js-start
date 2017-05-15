@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>6.条件渲染</title>
+    <meta charset="utf-8">
+    <style>
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    </style>
+    <script src="./vue.js"></script>
+    <script>
+    window.onload = function() {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                ok: true,
+                type: 'a',
+                loginType: 'username'
+            },
+            methods: {
+                toggleType: function() {
+                    if (this.loginType == 'username')
+                        this.loginType = 'email'
+                    else
+                        this.loginType = 'username'
+                }
+            }
+        })
+    }
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <p class="title">v-if</p>
+        <h1 v-if="ok">Yes</h1>
+        <h1 v-else>No</h1>
+        <p class="title">template 中 v-if 条件组</p>
+        <template v-if="ok">
+            <h4>Title</h4>
+            <p>Paragraph 1</p>
+            <p>Paragraph 2</p>
+        </template>
+        <p class="title">v-else</p>
+        <p>复用随机数来选择显示/隐藏</p>
+        <div v-if="Math.random() > 0.5">
+            Now you see me
+        </div>
+        <div v-else>
+            Now you don't
+        </div>
+        <p>v-else-if</p>
+        <div v-if="type==='A'">
+            A
+        </div>
+        <div v-else-if="type==='B'">
+            B
+        </div>
+        <div v-else-if="type==='C'">
+            C
+        </div>
+        <div v-else>
+            NOT A/B/C
+        </div>
+        <p>用key管理可复用的元素</p>
+        <template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username">
+        </template>
+        <template v-else="loginType === 'email'">
+            <label>Email</label>
+            <input placeholder="Enter your email">
+        </template>
+        <p>
+            <input type="button" name="Toggle login type" value="Toggle login type" @click="toggleType">
+        </p>
+		
+		<p>增加了key 之后的 template,每次切换时，输入框都将被重新渲染</p>
+		<template v-if="loginType === 'username'">
+            <label>Username</label>
+            <input placeholder="Enter your username" key="username-input">
+        </template>
+        <template v-else="loginType === 'email'">
+            <label>Email</label>
+            <input placeholder="Enter your email" key="email-input">
+        </template>
+        <p>
+            <input type="button" name="Toggle login type" value="Toggle login type" @click="toggleType">
+        </p>
+
+    </div>
+</body>
+
+</html>
