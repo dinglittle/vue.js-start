@@ -12,6 +12,8 @@
 
 --[Style与Class绑定](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/5.Class%E4%B8%8EStyle%E7%BB%91%E5%AE%9A.md)
 
+--[条件渲染](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/6.%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93.md)
+
 
 二) [Vue.js 语法练习](https://github.com/dinglittle/Vue.js/blob/master/vue%E5%9F%BA%E7%A1%80.html)
 
@@ -24,6 +26,8 @@
 --[计算属性](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/4.%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7.html)
 
 --[Style与Class绑定](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/5.Class%E4%B8%8EStyle%E7%BB%91%E5%AE%9A.html)
+
+--[条件渲染](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/6.%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93.html)
 
 
 --[自定义事件](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.html)
