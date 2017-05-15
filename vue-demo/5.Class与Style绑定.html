@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>5.Class与Style绑定</title>
+    <meta charset="utf-8">
+    <style>
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    
+    .active {
+        color: orange;
+    }
+    
+    .text-danger {
+        color: red;
+    }
+    </style>
+    <script type="text/javascript" src="./vue.js"></script>
+    <script type="text/javascript">
+    window.onload = function() {
+    	// 局部组件的定义，必须先定义，后使用
+    	var com = {
+    		template:'<p class="foo bar">Hi</p>'
+    	};
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isActive: true,
+                hasError: false,
+                // 对象语法
+                classObject:{
+                	active:true,
+                	'text-danger':false
+                },
+                // 数组语法
+                activeClass:'active',
+                errorClass:'text-danger',
+                activeColor:'green',
+                fontSize:20,
+                // 绑定内联语法-对象语法
+                styleObject:{
+                	color:'green',
+                	fontSize:'20px'
+                }
+            },
+            components:{
+            	// 局部组件的定义，必须先定义，后使用
+            	'my-component':com
+            }
+        })
+    }
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <p class="title">对象语法</p>
+        <p class="static" v-bind:class="{ active:isActive,'text-danger':hasError}">对象语法</p>
+        <p>也可以直接绑定数据里的一个对象</p>
+        <!-- <p>直接绑定一个对象</p> -->
+        <p v-bind:class="classObject">直接绑定一个对象</p>
+        
+        <p>数组语法</p>
+        <p v-bind:class="[activeClass,errorClass]">数组语法</p>
+        <p>三元表达式</p>
+        <p v-bind:class="[isActive?activeClass:'',errorClass]">三元表达式</p>
+
+		<p>用在组件上</p>
+		<my-component class="active">用在组件上</my-component>
+
+		<p>绑定内联样式</p>
+		<!-- 内联样式的绑定，不能直接写，也需要通过  数据来绑定 -->
+		<p v-bind:style="{color:activeColor,fontSize:fontSize+'px'}">绑定内联样式-对象语法</p>
+		<p v-bind:style="styleObject">绑定内联样式-对象语法2</p>
+
+    </div>
+</body>
+
+</html>
