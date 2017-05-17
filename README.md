@@ -18,6 +18,8 @@
 
 --[事件处理器](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/8.%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8.md)
 
+--[表单控件绑定](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/9.%E8%A1%A8%E5%8D%95%E6%8E%A7%E4%BB%B6%E7%BB%91%E5%AE%9A.md)
+
 二) [Vue.js 语法练习](https://github.com/dinglittle/Vue.js/blob/master/vue%E5%9F%BA%E7%A1%80.html)
 
 --[Hello Vue.js](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/1.HelloVue.html)
@@ -35,6 +37,8 @@
 --[列表渲染](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/7.%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93.html)
 
 --[事件处理器](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/8.%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8.html)
+
+--[表单控件绑定](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/9.%E8%A1%A8%E5%8D%95%E6%8E%A7%E4%BB%B6%E7%BB%91%E5%AE%9A.html)
 
 --[自定义事件](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.html)
           
