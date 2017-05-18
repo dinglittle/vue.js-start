@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>10.组件</title>
+    <meta charset="utf-8">
+    <style>
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    
+    .title2 {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    </style>
+    <script src="./vue.js"></script>
+    <script>
+    window.onload = function() {
+        // 全局模版
+        Vue.component('my-component', {
+            template: "<div>my-component</div>"
+        })
+        var template1 = {
+                template: '<p>我是模板1</p>'
+            }
+        // 错误的演示
+        Vue.component('my-component2', {
+                template: '<div>msg</div>',
+                data: {
+                    msg: "my-component2"
+                }
+            })
+        // 正确的组件 使用 data
+        // 定义data
+        var data = {
+            counter: 0
+        }
+        Vue.component('simple-counter', {
+                template: '<button v-on:click="counter+=1">{{counter}}</button>',
+                data: function() {
+                    return data
+                }
+            })
+        // 返回不同的值
+        Vue.component('simple-counter2', {
+            template: '<button v-on:click="counter+=1">{{counter}}</button>',
+            data: function() {
+                return {
+                    counter: 0
+                }
+            }
+        })
+
+        // prop传递数据
+        // 全局 组件 必须放在 vue 实例之前，否则检测 不到
+        Vue.component('child', {
+            props: ['message'],
+            template: '<p>{{message}}</p>'
+        })
+        //prop传递数据，驼峰数据
+        Vue.component('child2',{
+        	props:['myMessage'],
+        	template:'<p>{{myMessage}}</p>'
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+            	parentMsg:'123'
+            },
+            // 组件
+            components: {
+                com: template1
+            }
+        })
+
+
+    }
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <p class="title">组件</p>
+        <p class="title2">全局组件</p>
+        <my-component></my-component>
+        <p class="title2">局部组件</p>
+        <com></com>
+        <p class="title2">指定包裹元素</p>
+        <ul>
+            <li is="com"></li>
+            <com></com>
+        </ul>
+        <table>
+            <com></com>
+            <my-component></my-component>
+        </table>
+        <p class="title2">错误的 组件 data 使用</p>
+        <my-component2></my-component2>
+        <p class="title2">正确的 组件 data 使用</p>
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+        <p class="title2">正确的 组件 data 使用——返回不同的值</p>
+        <simple-counter2></simple-counter2>
+        <simple-counter2></simple-counter2>
+        <simple-counter2></simple-counter2>
+        <p class="title">prop</p>
+        <p class="title2">prop传递数据</p>
+        <child message="i am a child">32</child>
+        <p class="title2">camelCase vs. kebab-case 驼峰式转换为短横线隔开式</p>
+        <child2 my-message="i am a child2"></child2>
+        <p class="title2">动态 prop ，动态绑定 父组件 内容 到 子组件</p>
+		<input v-model="parentMsg">
+		<br>
+		<child2 :my-message="parentMsg"></child2>
+
+		<child2 my-message="my-message"></child2>
+		<p>假如传递的是 number 必须 使用 v-bind 绑定 </p>
+		<child2 v-bind:my-message="132"></child2>
+
+    </div>
+</body>
+
+</html>
