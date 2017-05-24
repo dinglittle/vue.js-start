@@ -46,3 +46,26 @@
 
 --[自定义事件](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.html)
           
+
+
+加vue群 631586939 必看
+群内禁发：http://www.kancloud.cn/jikeytang/qq/81132
+群内资料：http://t.cn/RGE7EXW
+Vuejs群资料：http://t.cn/Rb1aUQT
+官网：http://cn.vuejs.org/guide/
+论坛：http://forum.vuejs.org/
+新版群规：http://t.cn/RUdaGHn
+
+小凡哥Vuejs视频
+http://i.youku.com/u/UMzQxOTE4MDE5Mg==
+讲解 vue.js 实例
+https://github.com/bhnddowinf/vuejs-learn
+Vue开源项目库
+http://t.cn/Ri90k28
+
+vue2.0相关文档
+http://vuefe.cn/ 中文文档
+http://vuejs.org/guide/ 官网原文文档
+http://router.vuejs.org/zh-cn/index.html vue-router2.0中文文档
+http://vuex.vuejs.org/en/index.html vuex2.0 英文文档
+https://github.com/bhnddowinf/vuejs2-learn v2学习项目
