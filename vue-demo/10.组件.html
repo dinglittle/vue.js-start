@@ -64,10 +64,39 @@
         	props:['myMessage'],
         	template:'<p>{{myMessage}}</p>'
         })
+        //单向数据流
+        //更改传入的值
+        Vue.component('child3',{
+            props:['myMessage2'],
+            template:'<p>{{myMessage2}}</p>',
+            data:function(){
+                return {
+                    counter:this.myMessage2+'1123'
+                }
+            },
+            // computed:{
+            //     normalizedSize :function(){
+            //         return this.myMessage2.toUpperCase();
+            //     }
+            // }
+        })
+        // prop传递数据  -  验证
+        Vue.component('child4',{
+            props:{
+                propA:{
+                    type: Number,
+                    default:100
+                }
+            },
+            template'<input>{{numbert}}</input>'
+        })
+        // 实例化 Vue
         var app = new Vue({
             el: '#app',
             data: {
-            	parentMsg:'123'
+            	parentMsg:'123',
+                counter:'',
+                numbert:0
             },
             // 组件
             components: {
@@ -119,6 +148,14 @@
 		<child2 my-message="my-message"></child2>
 		<p>假如传递的是 number 必须 使用 v-bind 绑定 </p>
 		<child2 v-bind:my-message="132"></child2>
+
+        <p class="title2">单向数据流，更改传入值</p>
+        <!-- <child3 my-message2="this is ">
+            {{counter}}
+        </child3> -->
+        <!-- <child3>{{counter}}</child3> -->
+        <br>
+        <child4>{{numbert}}</child4>
 
     </div>
 </body>
