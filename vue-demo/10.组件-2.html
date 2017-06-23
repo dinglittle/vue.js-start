@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>10.组件-2</title>
-	<style>
+    <title>10.组件-2</title>
+    <meta charset="utf-8">
+    <style>
     .title {
         font-size: 25px;
         font-weight: bold;
@@ -15,14 +17,263 @@
     </style>
     <script type="text/javascript" src="./vue.js"></script>
     <script type="text/javascript">
-    	window.onload=function(){
+    window.onload = function() {
+        Vue.component('button-counter', {
+            template: '<button v-on:click="increment">{{counter}}</button>',
+            data: function() {
+                return {
+                    counter: 0
+                }
+            },
+            methods: {
+                increment: function() {
+                    this.counter += 1
+                        // $emit 触发事件 启动自己
+                    this.$emit('increment')
+                }
+            }
+        })
 
-    	}
+        Vue.component('test-div', {
+                template: '<div v-on:click="testfn">{{teststr}}</div>',
+                data: function() {
+                    return {
+                        teststr: 'sdfsdf'
+                    }
+                },
+                methods: {
+                    testfn: function() {
+                        this.teststr += '123'
+                        this.$emit('testfn')
+                    }
+                }
+            })
+            // 自定义组件 使用 v-model
+        Vue.component('currency-input', {
+            template: '<input v-bind:value="value" v-on:input="updateValue($event.target.value)>',
+            props: ['value'],
+            methods: {
+
+            }
+
+        })
+
+        //用一个空的 Vue 实例作为中央事件总线
+        var bus = new Vue();
+
+        //非父子组件通信
+        Vue.component('com-one', {
+            template: '<input ></input>',
+            // methods: {
+            //     //触发组件 A 中的事件
+            //     memit: bus.$emit('#com', 1)
+            // }
+        })
+
+        Vue.component('com-two', {
+            template: '<p>com-two{{this.comValue}}</p>',
+            // methods: {
+            //     //在组件B创建的钩子中监听事件
+            //     mon: bus.$on('#com', function(id) {
+            //         this.comValue = id;
+            //     })
+            // }
+        })
+
+
+        ///slot
+        ///子组件
+        Vue.component('com-child',{
+            template:'<div><h2>我是子组件的标题</h2><slot>我是 slot 备用内容，当没有替换的内容时，显示我</slot></div>'
+        })
+        ///父组件
+        Vue.component('com-parent',{
+            template:'<div><com-child><p>我是替换子组件的内容</p></com-child></div>'
+        })
+
+        ///具名slot
+        Vue.component('app-layout',{
+            template:"<div><header><slot name='header'></slot></header><main><slot></slot></main><footer><slot name='footer'></slot></footer></div>"
+        })
+        ///具名slot 父组件
+        Vue.component('app-alyout-parent',{
+            template:"<app-layout><h1 slot='header'>这里可以是一个页面标题</h1><p>主要内容的一个段落</p><p>另一个主要段落</p><p slot='footer'>这里有一些联系信息</p></app-layout>"
+        })
+
+        //slot 初级使用
+        //当 调用 该子组件的  slot(插槽)没有 替换内容的时候，才会显示默认内容
+        Vue.component('com-child2',{
+            template:'<div>我是子组件的标题 <slot>我是默认内容</slot></div>'
+        })
+        //父组件 ，用来调用  带有 slot(插槽) 的子组件
+        Vue.component('com-parent2',{
+            template:'<div>我是父组件的标题 <br><com-child2>我是替换子组件插槽的内容</com-child2></div>'
+        })
+        //父组件 没有 插槽内容，则显示  默认内容
+        Vue.component('com-parent3',{
+            template:'<div>我是父组件，没有替换插槽内容</div>f'
+        })
+
+        //练习  具名的 slot
+        Vue.component('com-child3',{
+            template:'<div>'
+                    +'我是具名slot子组件'
+                    +'<slot name="test-slot">我是具名slot子组件默认内容</slot>'
+                    +'<slot name="test-slot2">我是 test-slot2</slot>'
+                    +'</div>'
+        })
+        //具名组件 的使用，先载入 子组件 ，然后在 子组件 内，使用别的 元素指定 slot name
+        Vue.component('com-parent4',{
+            template:'<div>'
+                    +'我是父组件的标题'
+                    +'<com-child3 >'
+                    +'<p slot="test-slot">我是替换子组件 slot name = test-slot的内容</p>'
+                    +'</com-child3>'
+                    + '</div>'
+        })
+        // 具名slot 使用  - 复杂例子
+        // 指定的name是用来 
+        Vue.component('com-child5',{
+            template:'<div>'
+                    +'<slot name="header"></slot>'
+                    +'<slot name="main"></slot>'
+                    +'<slot name="footer"></slot>'
+                    +'<slot>other2222</slot>'
+                    +'</div>'
+        })
+        //父组件 
+        //具名组件的使用，先载入 子组件，然后在子组件内，使用别的元素指定 slot name, 子组件 内未使用的,将会照常显示
+        Vue.component('com-parent5',{
+            template:'<com-child5>'
+                    +'<p slot="header">我是父组件的header</p>'
+                    +'<p slot="main">我是父组件的main</p>'
+                    +'<p slot="footer">这里有一些联系信息</p>'
+                    +'<p slot="other2">other2</p>'//这里的 other2 就是找不到的内容，所以用 默认 slot 替换 ，other222
+                    +'</com-child5>'
+        })
+
+
+        ///作用域插槽
+        ///作用域插槽是一种特殊类型的插槽，用作使用一个(能够传递数据到)可重用模板替换已渲染元素
+        ///在子组件中，只需将数据传递到插槽，就像你将prop传递给组件一样
+        ///在子组件中，只需将数据传递到插槽，就像你将prop传递给组件一样
+        Vue.component('com-child6',{
+            //Cannot use <slot> as component root element because it may contain multiple nodes.
+            //不可以 将 slot用作根元素，因为它可能包含多个节点
+            template:'<div><slot text="hello from child"></slot></div>'
+        })
+        //在父级中，具有特殊属性 scope 的 template 元素，表示它是作用域插槽的模板。 scope 的值对应一个临时变量名，此变量接收从子组件中传递的 prop 对象
+        Vue.component('com-parent6',{
+            template:'<div>'
+                    +'<com-child6>'
+                    +'<template scope="props">'
+                    +'<span>hello from parent</span>'
+                    +'<span>{{props.text}}</span>'
+                    +'</template>'
+                    +'</com-child6>'
+                    +'</div>'
+        })
+
+
+
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                total: 0,
+                teststr: '',
+                something: '',
+                //非父子组件通信
+                comValue: 0
+            },
+            methods: {
+                incrementTotal: function() {
+                    this.total += 1
+                },
+                test: function() {
+                    this.teststr = 'sdal;fjafl;jfad'
+                }
+            }
+        })
+    }
     </script>
 </head>
+
 <body>
+    <div id="app">
+        <p class="title">
+            自定义事件
+        </p>
+        <p class="title2">
+            使用 v-on 绑定自定义事件
+        </p>
+        <ul>
+            <li>使用 $on(eventName) 监听事件</li>
+            <li>使用 $emit(eventName) 触发事件</li>
+        </ul>
+        另外，父组件可以在使用子组件的地方直接用 v-on 绑定
+        <p>组件中的方法和 外部的方法 互不干涉，this.$emit('increment') 只是调用了 increment 方法 ，外部的 v-on:increment=incrementTotal 则是 将方法自定义为外部 的方法</p>
+        <div>
+            <p>{{total}}</p>
+            <!-- v-on 绑定 自定义事件: increment(组件中) -->
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+            <button-counter v-on:increment="incrementTotal"></button-counter>
+        </div>
+        <div>
+            <p>{{teststr}}</p>
+            <test-div v-on:testfn="test"></test-div>
+        </div>
+        <p class="title">自定义组件</p>
+<!--         <input v-model="something">
+        <p v-model="something"></p> -->
+        <p class="title">非父子组件通信</p>
+        <div id="com">
+            <com-one>{{comValue}}</com-one>
+            <com-two>{{comValue}}</com-two>
+        </div>
 
-	
+        <p></p>
+        <p></p>
+        <p></p>
+        <p class="title">使用Slot分发内容</p>
+        <p class="title2">单个 slot</p>
+        <p>除非父组件模板包含至少一个 slot 插口，否则父组件的内容将会被丢弃。当子组件模板只有一个没有属性的 slot 时，父组件整个内容片段将插入到 slot 所在的 DOM 位置，并替换掉 slot 标签本身</p>
+        <p>最初在 slot 标签中的任务内容都被视为 备用内容。备用内容在子组件的作用域内编译，并且只有在宿主元素为空，且没有要插入的内容时才显示备用内容</p>
 
+        <com-parent></com-parent>
+
+        <app-alyout-parent></app-alyout-parent>
+
+        <!-- 练习 -->
+        <p class="title2">slot 简单使用 ,替换 子组件 slot 内容</p>
+        <com-parent2></com-parent2>
+        <p class="title2">没以替换插槽的内容</p>
+        <!-- 没有替换插槽内容 -->
+        <com-parent3></com-parent3>
+
+        <!-- 具名slot 使用 -->
+        <p class="title2">具名slot使用</p>
+        <p>//slot 初级使用
+        //当 调用 该子组件的  slot(插槽)没有 替换内容的时候，才会显示默认内容</p>
+        <com-parent4></com-parent4>
+        
+        <p class="title2">具名slot使用-复杂例子</p>
+        <p>// 具名slot 使用  - 复杂例子
+        // 指定的name是用来 </p>
+        <com-parent5></com-parent5>
+
+        <!-- 作用域插槽  -->
+        <p class="title2">作用域插槽</p>
+        <p>
+            作用域插槽是一种特殊类型的插槽，用作使用一个(能够传递数据到)可
+            重用模板替换已渲染元素。
+            在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：
+        </p>
+
+        <com-parent6></com-parent6>
+
+
+    </div>
 </body>
+
 </html>
