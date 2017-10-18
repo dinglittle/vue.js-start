@@ -46,7 +46,9 @@
 
 --[自定义事件](https://github.com/dinglittle/Vue.js-start/blob/master/vue-demo/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.html)
           
-
+---
+#### 项目实战
+--[安装+配置](./vue-start.md)
 
 加vue群 631586939 必看
 
