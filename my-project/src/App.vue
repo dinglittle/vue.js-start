@@ -16,6 +16,10 @@
         <!-- 路由传参   "user/id=1/name=2" -->
         <router-link to="/user/id=1/name=1/age=1">Go User </router-link>
       </li>
+      <li>
+        <!-- 命名路由,给路由配置 名字,跳转的时候 通过名字跳转 -->
+        <router-link :to="{name: 'User',params:{id:123,name:'lwj',age:18}}">命名路由</router-link>
+      </li>
 
     </ul style="type='none'">
 

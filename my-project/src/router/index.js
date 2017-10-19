@@ -28,18 +28,26 @@ export default new Router({
       component: User,
       children: [
         {
-          path: '',
-          component: HelloWorld
-        },
-        {
           path: 'name',
           component: UserSub
         },
         {
           path: 'age',
           component: First
+        },
+        {
+          path: '',
+          component: HelloWorld
         }
       ]
+    },
+    {
+      path: '/user/:id/:name/:age?',
+      name: 'User',
+      components: {
+        default: User,
+        a: First
+      }
     }
   ]
 })
