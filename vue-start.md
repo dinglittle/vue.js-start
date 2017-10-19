@@ -288,7 +288,7 @@ const router = new VueRouter({
 
 此时,基于上面的配置,当你访问 `/user/foo` 时, `User`的出口是不会渲染任何东西,这是因为没有匹配到合适的子路由. 
 
-**_我们定义一个空的路由,这个路由的内容会一直显示,当没有匹配到内容的时候不至于白屏，但是这个空路由要放到最后_**
+**_我们定义一个空的路由,当没有匹配到内容的时候不至于白屏，但是这个空路由要放到最后_**
 
 ```
 const router = new VueRouter({
@@ -314,4 +314,374 @@ const router = new VueRouter({
 router.push( location , onComplete?, onAbort?)
 ```
 **注意:在Vue实例内部,你可以通过 `$router` 访问路由实例.因此你可以调用 `this.$router.push`.**
- 
+
+想要导航到不同的 `URL` ,则使用 `router.push` 方法. 这个方法会向 htstory 栈添加一个新的记录,所以,当用户点击浏览器后退按钮时,则回到之前的URL.
+
+当你点击 `<router-link>` 时,这个方法会在内部调用,所以说,点击 `<router-link :to="...">`等同于调用 `<router.push(...)`.
+
+
+声明式 | 编程式
+---|---
+`router-link :to="">` | `router.push(...)`
+
+该方法的参数可以是一个字符串路径,或者一个描述地址的对象.例如:
+
+```
+//字符串
+router.psh('home')
+
+//对象
+router.push({path:'home'})
+
+//命名的路由
+router.push({ name:'user', params: { userId: 123 }})
+
+//带查询参数,变成 /register?plan=private
+router.push({ path: 'register', query: { plan: 'private' }})
+```
+**注意:如果提供了 `path`,`params`会被忽略,上述例子中的 `qurey` 并不属于这种情况.取而代之的是下面例子的做法,你需要提供路由的 `name` 或手写完整的带有参数的 `path`:**
+```
+    const userId = 123
+    router.push({ name: 'user', params: { userId }}) // -> /user/123
+    router.push({ path: 'user/${userId}` }) // -> /user/123
+    // 这里的 params 不生效
+    router.push({ path: '/user', params: { userId }}) // -> /user
+```
+
+同样的规则也适用于 `router-link` 组件的 `to` 属性.
+
+在2.2.0+ ,可选的在 `router.push` 或 `router.replace` 中提供 `onComplete` 和 `onAbort` 回调作为第二个和第三个参数. 这些回调将会在导航成功完成(在所有的异步钩子被解析之后)或终止(导航到相同的路由、或在当前导航完成之前导航到另一个不同的路由)的时候进行相应的调用。
+
+**注意：**如果目的地和当前路由相同，只有参数发生了改变（比如从一个用户资料到另一个 `/users/1` -> `/users/2` 你需要使用 [berforeRouteUpdate]() 来响应这个变化(比如抓取用户信息).
+
+**`router.replace(laction, onComplete?, onAbort?)`**
+
+跟 `router.push` 很像,唯一的不同就是,它不会向 history 添加新记录,而是跟它的方法名一样 -- 替换当前的 history 记录.
+
+声明式|编程式
+--|--
+ `<router-link : to="... relpace>`|`router.replace(...)`
+
+**`router.go(n)`**
+这个方法的参数是一个整数,意思是在 history 记录中向前或者后退多少步,类似 `window.history.go(n)`.
+
+例子
+```
+// 在浏览器记录中前进一步,等同于 history.forward()
+router.go(1)
+
+// 后退一步记录,等同于 history.back()
+router.go(-1)
+
+// 前进3步记录
+router.go(3)
+
+// 如果 history 记录不够用,那就默默地失败呗
+router.go(-100)
+router.go(100)
+```
+#### 操作 History
+你也许注意到 `router.push`、`router.replace` 和 `router.go` 跟 [windwo.history.pushState、window.hostory.replaceState 和 window.history.go](https://developer.mozilla.org/en-US/docs/Web/API/History) 好像,实际上它们确实是效仿 `window.history` API 的.
+
+因此 ,如果你已经熟悉 [Browser History APIs]() , 那么在 vue-router 中操作 history 就是超级简单的.
+
+还有值得提及的 , vue-router 的导航方法( `push`、`replace`、`go`) 在各类路由模式( `history`、`hash` 和 `abstract`) 下表现一致.
+
+
+---
+## 命名路由
+
+有时候,通过一个名称来标识一个路由显得方便一些, 特别是在链接一个路由,或者是执行一些跳转的时候. 你可以在创建 Router 实例的时候,在 `routes` 配置中给某个路由设置名称.
+
+```
+const router = new VueRouter({
+    routes: [
+        path: '/user/:userId',
+        name: 'user',
+        component: User
+    ]
+})
+```
+
+要链接到一个命名路由,可以给 `router-link` 的 `to` 属性传一个对象:
+
+```
+<router-link :to="{ name: 'user', params: {userId: 123 }}">User</router-link>
+```
+
+这跟代码调用 `router.push()` 是一回事:
+
+```
+router.push({ name: 'user', params: {userId: 123}})
+```
+这两种方式都会把路由导航到 `/user/123` 路径.  [完整例子](https://github.com/vuejs/vue-router/blob/next/examples/named-routes/app.js)
+
+
+---
+
+## 命名视图
+
+有时候想同时(同级)展示多个视图,而不是嵌套展示,例如创建一个布局,有`sidebar`(侧导航)和`main`(主内容)两个视图,这个时候命名视图就派上用场了.你可以在界面中拥有多个单独命名的视图,而不是只有一个单独 的出口.如果 `router-view` 没有设置名字,那么默认为 `default`.
+
+```
+<router-view class="view one"></router-view>
+<router-view class="view two" name="a"></router-view>
+<router-view class="view three" name="b"></router-view>
+```
+一个视图使用一个组件渲染,因此对于同个路由,多个 视图就需要多个组件. 确保正确使用 `component` 配置(带上s);
+```
+const router = new VueRouter({
+    routes: [
+        {
+            path: '/',
+            components: {
+                default: Foo,
+                a: Bar,
+                b: Baz
+            }
+        }
+    ]
+})
+```
+
+## 重定向和别名
+
+#### 重定向
+
+重定向也是通过 `routes` 配置来完成,下面例子是从 `/a` 重定向到 `/b`:
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/a', redirect: '/b' }
+    ]
+})
+```
+重定向的目标也可以是一个命名的路由:
+```
+const router = enw VueRouter({
+    routes: [
+        { path: '/', redirect: { name: 'foo' }}
+    ]
+})
+```
+甚至是一个方法,动态返回重定向目标:
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/a'. redirect: to =>{
+            // 方法接收 目标路由 作为参数
+            // return 重定向的 字符串路径/路径对象
+        }}
+    ]
+})
+```
+其它高级 用法,[例子](https://github.com/vuejs/vue-router/blob/next/examples/redirect/app.js)
+
+
+#### 别名
+【重定向】的意思是，当用户访问 `/a`时,URL 将会被替换成 `/b` ,然后匹配路由为 `/b`,那么【别名】又是什么呢?
+**`/a`的别名是`/b`,意味着,当用户访问`/b`时,URL会保持为 `/b`,但是路由匹配则为`/a`,就像用户访问`/a`一样.**
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/a', component: A, alias: '/b' }
+    ]
+})
+```
+【别名】的功能让你可以自由地将UI结构映射到任意的URL，而不是受限于配置的嵌套路由结构。
+
+高级用法 [例子](https://github.com/vuejs/vue-router/blob/next/examples/route-alias/app.js)
+
+---
+## 路由组件传参
+
+在组件中使用 `$route` 会使之与其对应路由形成高度耦合,从而使组件只能在某些特定的url上使用,限制了其灵活性.
+
+使用props将组件和路由解耦:
+
+![image](https://user-images.githubusercontent.com/17232138/31766074-258f676a-b4f9-11e7-965b-855e84c6b6e1.png)**与$toute耦合**
+
+```
+const User = {
+    template: '<div> User {{ $route.params.id }}</div>'
+}
+
+const router = new VueRouter({
+    routes: [
+        { path: '/user/:id', component: User }
+    ]
+})
+```
+![image](https://user-images.githubusercontent.com/17232138/31766276-a96cc4ec-b4f9-11e7-9f23-e6ede550a226.png)**使用props解耦**
+
+```
+const User = {
+    props: ['id'],
+    template: '<div>User {{ id }} </div>'
+}
+
+const router = new VueRouter({
+    routes: [
+        { path: '/user/:id', component: User, props: true} 
+        
+        // 对于包含命名视图的路由,必须分别为每个命名视图添加 props 选项:
+        {
+            path: '/user/:id',
+            components: { default: User, sidebar: Sidebar },
+            props: { default: true, sidebar: fase }
+        }
+    ]
+})
+```
+这样便可能在任何地方使用该组件,使得该组件更易于重用和测试.
+
+#### 布尔模式
+
+如果 props 被设置为 御前, `route.params` 将会被设置为组件属性.
+
+#### 对象模式
+
+如果props是一个对象,它会被原样设置为组件属性. 当 props 是静态的时候有用.
+
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/paromotion/from-newsletter', component: Promotion, props: { newsletterPopup: fase }}
+    ]
+})
+```
+
+#### 函数模式
+
+可以创建一个函数返回 props. 这样便 可以将参数转换成另一种类型,将静态值与基于路由的值结合等等.
+
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/search', component: SearchUser, props: (route) => ({query: route.query.q }) }
+    ]
+})
+```
+
+Url: `/search?q=vue` 会将 `{query: "vue"}` 作为属传递给 SearchUser 组件.
+
+
+请尽可能保持 props 函数为无状态的,因为它只会路由发生变化时起作用. 如果你需要状态来定义 props ,请使用包装组件,这样vue才可以对状态变化做出反应.
+
+
+
+
+## HTML5 History 模式
+`vue-router`默认 hash 模式 -- 使用URL 的 hash 来模拟一个完整的URL,于是当URL改变时,页面不会重新加载.
+
+如果不想要很丑的 has, 我们可以用路由的 **histroy模式** ,这种模式充分利用 `history.pushState` API 来完成 URL跳转而无须重新加载页面.
+
+```
+const router = new VueRouter({
+    mode: 'history',
+    routes: [...]
+})
+```
+当使用history械时,URL 就像正常的url, 例如 `http://yoursite.com/user/id` ,也好看!
+
+不过这种模式要玩好,还需要后台配置支持.因为我们的应用 是页客户端应用,如果后台没能正确的配置,当用户在浏览器直接访问 `http://outsite.com/user/id` 就会返回  404,这是就好看了.
+
+所以呢,你要在服务端增加一个覆盖所有病况的候选资源: 如果 URL匹配不到任何静态资源,则应该返回同一个 `index.html` 页面,这个页面就是你 app 依赖的页面.
+
+#### 后端配置例子
+
+##### Apache
+```
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+```
+
+##### nginx
+```
+location /{
+    try_files $uri $uri/ /index.html;
+}
+```
+
+##### 原生 Node.js
+```
+const http = require('http')
+const fs = require('fs')
+const httpPort = 80
+
+http.createServer((req,res)=>{
+    fs.readFile('index.htm','uft-8',(err,content) =>{
+        if( err ){
+            console.log('We cannot open' index.htm ' file. ')
+        }
+        
+        res.writeHead( 200, {
+            'Content-Type': 'text/html; charset=utf-8'
+        })
+        
+        res.end(content)
+    }
+}).listen( httpPort, ()=>{
+    console.log('Server listening on: http://localhost:%s', httpPort)
+})
+```
+
+##### 基于Node.js的Express
+
+对于 Node.js/Express ,请考虑使用 [connect-history-api-fallback中间件](https://github.com/bripkens/connect-history-api-fallback)
+
+**Internet Infomation Service( IIS )**
+1.安装 [ISS UrlRewrite](https://www.iis.net/downloads/microsoft/url-rewrite)
+
+2.在你的网站根目录中创建一个`web.config`文件,内容如下:
+
+```
+</xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <rewrite>
+            <rules>
+                <rule name="Handle History Mode and custom 404/500" stopProcessing="true">
+                    <match url="(.*)" />
+                    <conditions logicalGrouping="MatchAll">
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" mat
+                    </conditions>
+                </rule>
+            </rules>
+        </rewrite>
+    </system.webServer>
+</configuration>
+```
+
+##### Caddy
+```
+rewrite {
+    regexp .*
+    to { path} /
+}
+```
+
+#### 警告
+
+给个警告,因为这么做以后,你的服务器就不再返回 404 错误页面,因为这对于所有路径都会返回 `index.html`文件.
+为了避免这种情况,你应该在 vue 应用里面覆盖所有的路由情况, 然后在给了一个404页面.
+
+```
+const router = new VueRouter({
+    routes:[
+        { path: '*', component: NotFoundComponent }
+    ]
+})
+```
+或者,如果你使用 Node.js 服务器,你可以用服务器端路由匹配到来的URL,并没有匹配到路由的时候返回 404 ,以实现回退. [Vue服务端渲染文档](https://ssr.vuejs.org/zh/)
+
+# 命名路由
+<!-- 给路由配置名字,在跳转的时候通过名字跳转 -->
+<router-link :to="{name:'Hello',params:{userId: 123, name: 'testName'}"></router-link>

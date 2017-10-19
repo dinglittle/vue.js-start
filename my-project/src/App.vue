@@ -14,7 +14,7 @@
       </li>
       <li>
         <!-- 路由传参   "user/id=1/name=2" -->
-        <router-link to="/user/id=1/name=2">Go user </router-link>
+        <router-link to="/user/id=1/name=1/age=1">Go User </router-link>
       </li>
 
     </ul style="type='none'">
