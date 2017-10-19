@@ -683,5 +683,7 @@ const router = new VueRouter({
 或者,如果你使用 Node.js 服务器,你可以用服务器端路由匹配到来的URL,并没有匹配到路由的时候返回 404 ,以实现回退. [Vue服务端渲染文档](https://ssr.vuejs.org/zh/)
 
 # 命名路由
+```
 <!-- 给路由配置名字,在跳转的时候通过名字跳转 -->
 <router-link :to="{name:'Hello',params:{userId: 123, name: 'testName'}"></router-link>
+```
