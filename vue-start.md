@@ -42,8 +42,9 @@ router - index.js - 主路由页面
 ```
 
 ---
+## 基础
 
-## 开始
+###  开始
 
 ### 路由模块
 
@@ -110,7 +111,7 @@ const app = new Vue({
 
 ---
 
-## 动态路由匹配
+### 动态路由匹配
 
 我们经常要把某种模式匹配到的所有路由,全部映射到同个组件. 例如,我们有一个 User 组件,对于所有 ID 各不相同的用户,都要使用这个组件来渲染. 那么,我们可以在 vue-router 的路由路径中使用 【动态路径参数】 (dynamic segment) 来达到这个效果:
 
@@ -217,7 +218,7 @@ const router = new VueRouter({
 有时候,同一个路由可以匹配多个路由,此时,匹配的优先级就按照路由的定义顺序 : **谁先定义的,谁的优先级就最高**.
 
 ---
-## 嵌套路由
+### 嵌套路由
 
 实际生活中的应用界面,通常由多层嵌套胡组建组合而成.同样地, URL中各段动态路径也按某种结构对应嵌套的种层组件,例如:
 
@@ -306,7 +307,7 @@ const router = new VueRouter({
 ```
 
 ---
-## 编程式导航
+### 编程式导航
 
 除了使用 `<router-link>` 创建 a 标签来定义导航链接,我们还可以借助 router 的实例方法,通过编写代码来实现.
 
@@ -389,7 +390,7 @@ router.go(100)
 
 
 ---
-## 命名路由
+### 命名路由
 
 有时候,通过一个名称来标识一个路由显得方便一些, 特别是在链接一个路由,或者是执行一些跳转的时候. 你可以在创建 Router 实例的时候,在 `routes` 配置中给某个路由设置名称.
 
@@ -419,7 +420,7 @@ router.push({ name: 'user', params: {userId: 123}})
 
 ---
 
-## 命名视图
+### 命名视图
 
 有时候想同时(同级)展示多个视图,而不是嵌套展示,例如创建一个布局,有`sidebar`(侧导航)和`main`(主内容)两个视图,这个时候命名视图就派上用场了.你可以在界面中拥有多个单独命名的视图,而不是只有一个单独 的出口.如果 `router-view` 没有设置名字,那么默认为 `default`.
 
@@ -444,7 +445,7 @@ const router = new VueRouter({
 })
 ```
 
-## 重定向和别名
+### 重定向和别名
 
 #### 重定向
 
@@ -493,7 +494,7 @@ const router = new VueRouter({
 高级用法 [例子](https://github.com/vuejs/vue-router/blob/next/examples/route-alias/app.js)
 
 ---
-## 路由组件传参
+### 路由组件传参
 
 在组件中使用 `$route` 会使之与其对应路由形成高度耦合,从而使组件只能在某些特定的url上使用,限制了其灵活性.
 
@@ -571,7 +572,7 @@ Url: `/search?q=vue` 会将 `{query: "vue"}` 作为属传递给 SearchUser 组�
 
 
 
-## HTML5 History 模式
+### HTML5 History 模式
 `vue-router`默认 hash 模式 -- 使用URL 的 hash 来模拟一个完整的URL,于是当URL改变时,页面不会重新加载.
 
 如果不想要很丑的 has, 我们可以用路由的 **histroy模式** ,这种模式充分利用 `history.pushState` API 来完成 URL跳转而无须重新加载页面.
@@ -682,6 +683,148 @@ const router = new VueRouter({
 ```
 或者,如果你使用 Node.js 服务器,你可以用服务器端路由匹配到来的URL,并没有匹配到路由的时候返回 404 ,以实现回退. [Vue服务端渲染文档](https://ssr.vuejs.org/zh/)
 
+
+## 进阶
+### 导航守卫
+**导航表示路由正在发生改变**
+
+正如其名,`vue-router`提供的导航守卫主要用来通过跳转或取消的方式守卫导航.有多种机会植入跌幅导航过程中: 全局的,单个路由独享的,或者组件级的.
+
+记住**参数或查询的改变不会触发进入/离开的导航守卫**. 你可以通过 [观察`$route`对象]() 来应对这些变化,或使用 `beforeRouteUPdate` 的组件内守卫.
+
+#### 全局守卫
+
+你可以使用`router.beforeEach`注册一个全局的前置守卫:
+
+```
+const router = new VueRouter({...})
+
+router.beforeEach((to , from , next) =>{
+    // ...
+})
+```
+
+当一个导航触发时,全局的前置守卫按照创建顺序调用.守卫是异步解析的执行,此时,导航所在的守卫 `resolve` 完之前一直处于 **等待中** .
+
+每个守卫方法接收三个参数:
+- **`to: Route:`** 即将要进入的目标 [路由对象](https://router.vuejs.org/zh-cn/api/route-object.html)
+- **`from: Route`** 当前导航正要离开的路由
+-  **`next: Function:`** 一定要调用方法来 **resolve** 这个钩子. 执行效果依赖 `next` 方法的调用 参数.
+
+    -- `next():` 进行管道中的下一个金子.如果全部钩子执行完了,则导航的状态就是 **confirmed*8 (确认的).
+    
+    -- `next(false):` 中断当前的导航.如果浏览器的 URL 改变了(可能是用户手动或浏览器后退按钮)那么URL地址会重置到`from`路由对应的地址.
+    
+    -- `next('/')` 或者 `next({ path: '/' })` 跳转到一个不同的地址.当前的导航被中断,然后进行一个新的导航.
+    
+    -- `next(error)`:(2.4.0+)如果传入 `next` 的参数是一个 `Error` 实例,则导航会被终止且该错误会被 传递给 `router.onError()` 注册过的回调.
+    
+**要确保 `next` 方法,否则钩子就不会被 resolved**
+
+
+#### 全局解析守卫
+
+在2.和.0+你可用 `router.beforeResolve` 注册 不念旧恶全局守卫. 这和 `router.beforeEach` 类似,区别是在导航被确认之前,**同时在所有组件内守卫和异步路由组件被解析之后**,解析守卫就被调用.
+
+#### 全局后置钩子
+
+你也可以注册全局后置钩子,然而和守卫不同的是,这些钩子不会接受`next`函数也不会改变导航本身:
+```
+router.afterEach((to, from) =>{
+    // ...
+})
+```
+
+#### 路由独享的守恒
+
+你可以在路由配置上直接定义 `beforeEnter` 守卫:
+```
+const router = new VueRouter({
+    routes: [
+        {
+            path: '/foo',
+            component: Foo,
+            beforeEnter: (to ,from, next) => {
+                // ...
+            }
+        }
+    ]
+})
+```
+这些守卫与全局前置守卫的方法参数是一样的.
+
+#### 组件内的守卫
+
+最后,你可以在路由组件内直接定义以下路由导航守卫:
+- beforeRouteEneter
+- beforeRouteUpdate (2.2新增)
+- beforeRouteLeave
+
+```
+const Foo = {
+    template: '...',
+    beforeRouteEnter (to, from, next){
+        // 在渲染该组件的对应路由被 confirm 前调用
+        // 不!能!  获取组件实例 `this`
+        // 因为当守卫执行前,组件实例还没被创建
+    },
+    beforeRouteUpdate (to, from, next){
+        // 在当前路由改变,介是该组件被复用是调用 
+        // 举例来说,对于一个带有动态参数的路径 /foo?id, 在 /foo/1 和 /foo/2 之间的时候,
+        // 由于会同样的 Foo 组件,因此组件实例会被复用. 而这个钩子就会在这个情况下调用.
+        // 可以访问组件实例 `this` 
+    },
+    beforeRouteLeave (to, from, next){
+        // 导航离开该组件的对应路由时调用
+        // 可以访问组件实例 `this`
+    }
+}
+```
+
+`beforeRouteEneter`守卫**不能**访问 `this` ,因为守卫在导航确认前被调用, 因此即将登场的新组件还没被创建.
+
+不过, 你可以通过传一个回调给 `next` 来访问组件实例. 在导航被确认的时候执行回调, 并且把组件实例作为回调方法的参数.
+
+```
+beforeRouteEnter (to, from, next){
+    next( vm => {
+        // 通过 `vm` 来访问组件实例
+    })
+}
+```
+你可以在 `beforeRouteLeave` 中直接访问 `this`. 这个离开守卫通常用来禁止用户在还未保存修改前突然离开.可以通过 `next(false)` 来取消导航.
+
+#### 完整的导航解析流程
+
+1. 导航被触发.
+2. 在失活的组件里调用离开守卫.
+3. 调用全局的 `beforeEach` 守卫.
+4. 在征用的组件里调用 `beforeRouteUpdate` 守卫(2.2+).
+5. 在路由配置里调用 `beforeEnter`.
+6. 解析异步路由组件.
+7. 在被激活的组件里调用 `beforeRouteEnter`.
+8. 调用全局的 `beforeResolve`守卫(2.5+).
+9. 导航被确认.
+10. 调用全局的`afterEach`钩子.
+11. 触发 DOM 更新.
+12. 用创建好的实例调用  `beforeRouteEnter` 守卫中传给 `next` 的回调函数.
+
+
+
+
+
+
+
+
 # 命名路由
+```
 <!-- 给路由配置名字,在跳转的时候通过名字跳转 -->
 <router-link :to="{name:'Hello',params:{userId: 123, name: 'testName'}"></router-link>
+```
+
+
+
+# 坑
+## 当vsCode 用来 Eslink 的时候,.vue 文件中的  script  里面
+- **1.   字符串不能用 双引号 "" , 需要改成单引号 ' '**
+- **2.   data_()_{ ... }    data 前后必须有空格 ( function 前后必须有空格 , 必须 是 return 返回对象 )**
