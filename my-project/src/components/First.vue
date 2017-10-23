@@ -1,6 +1,16 @@
 <template>
-  <ol>
-    <li v-for="item in [1,2,3]">{{ item }}</li>
-    
-  </ol>
+    <div>
+        <h1>{{ msg }}</h1>
+    </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      msg: 'Welcome to First page'
+    }
+  }
+}
+</script>
+

@@ -19,7 +19,6 @@ export default new Router({
     },
     {
       path: '/first',
-      name: 'First',
       component: First
     },
     {
@@ -30,10 +29,6 @@ export default new Router({
         {
           path: 'name',
           component: UserSub
-        },
-        {
-          path: 'age',
-          component: First
         },
         {
           path: '',

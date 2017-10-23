@@ -1,6 +1,7 @@
 <template>
     <div>
-        <ul>
+        <h1>{{msg}}</h1>
+        <ul class="">
             <li>
                 <button>
                     <router-link to="name" replace>Go name</router-link>
@@ -31,3 +32,19 @@
         <router-view name="b"></router-view>
     </div>
 </template>
+<script>
+export default {
+  data () {
+    return {
+      msg: 'Welcome to User page'
+    }
+  }
+}
+</script>
+<!-- 
+    添加 scoped 属性属性,这样 下面的样式只会作用到当前组件  
+    scoped : HTML5新属性,它允许我们为文档的指定部分定义样式,而不是整个文档
+-->
+<style scoped>
+
+</style>
