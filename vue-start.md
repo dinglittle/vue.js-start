@@ -55,7 +55,15 @@ router - index.js - 主路由页面
 
 
 
+
 # 坑
 ## 当vsCode 用来 Eslink 的时候,.vue 文件中的  script  里面
 - **1.   字符串不能用 双引号 "" , 需要改成单引号 ' '**
 - **2.   data_()_{ ... }    data 前后必须有空格 ( function 前后必须有空格 , 必须 是 return 返回对象 )**
+
+# 命名路由
+```
+<!-- 给路由配置名字,在跳转的时候通过名字跳转 -->
+<router-link :to="{name:'Hello',params:{userId: 123, name: 'testName'}"></router-link>
+```
+
