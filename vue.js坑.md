@@ -35,3 +35,6 @@ export default new Router({
 
 #### 路由后有空行
 ![image](https://user-images.githubusercontent.com/17232138/31698231-f88e9d22-b3ee-11e7-9652-96c67c6d056e.png)
+
+#### template 和 script 后面有空行
+![image](https://user-images.githubusercontent.com/17232138/31869444-a105d0b2-b7da-11e7-8ff5-9126682e96bc.png)

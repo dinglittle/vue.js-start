@@ -42,6 +42,9 @@ export default new Router({
       components: {
         default: User,
         a: First
+      },
+      beforeEnter: (to, from, next) => {
+        console.log(51351351153)
       }
     }
   ]
