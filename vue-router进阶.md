@@ -299,5 +299,146 @@ export default{
 通过这种方式,在导航转入新的路由前获取数据. 可以在接下来的组件的 `beforeRouteEnter` 守卫中获取数据,当数据获取成功后只调用 `next` 方法
 
 ```
+export default {
+    data () {
+        return {
+            post: null,
+            error: null
+        }
+    },
+    beforeRouteEnter (to, from, next) {
+        getPost(to.params.id, (err, post) => {
+            next(vm => vm.setData(err, post)) 
+        }
+    },
+    // 路由改变前,组件就已经渲染完了
+    // 逻辑稍稍不同
+    beforeRouteUpdate (to, from, next){
+        this.post = null
+        getPost(to.params.id, (err, post) =>{
+            this.setData(err, post)
+            next()
+        })
+    },
+    methods: {
+        setData (err, post) {
+            if(err) {
+                this.error = err.toString()
+            } else {
+                this.post = post
+            }
+        }
+    }
+}
+```
+
+在为后面的视图获取数据时,用户会停留在当前的界面,因此建议在数据获取期间,显示一些进度条或者别的指示.
+
+如果数据获取失败,同样有必要展示一些全局的错误提醒.
+
+
+### 滚动行为
+
+使用前端路由,当切换到新路由时,想要页面滚到顶部,或者是保持原先的滚动位置,就像重新加载页面那样.
+
+`vue-router`能做到,而且更好,它让你可以自定义路由切换时页面如何滚动.
+
+**注意:这个功能只在 HTML5 history 模式下可用.**
+
+当创建一个 Router 实例,你可以提供一个 `scrollBehavior` 方法:
+```
+const router = new VueRouter({
+    routes: [...],
+    scrollBehavior (to, from , savedPosition){
+        // return 期望滚动到哪个位置
+    }
+})
+```
+
+`scrollBehavior` 方法接收`to` 和 `from` 路由对象. 第三个参数 `savedPosition` 当且仅当 `postate` 导航(通过浏览器的前进/后退按钮触发)时才可用.
+
+这个方法返回滚动位置的对象信息,长这样:
+- `{ x: number, y: number }`
+- `{ selector: string, offset? : { x: number, y: number}}` (offset 只在2.6.0支持)
+
+如果返回一个 falsy (译者注: falsy 不是 false , [参考这里](https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy)的值,或者是一个空对象,那么不会发生滚动.
+
+举例:
+```
+scrollBehavior ( to, from, savePosition){
+    return { x:0 ,y:0 }
+}
+```
+
+对于所有路由导航,简单地让页面滚动到顶部.
+
+返回`savePosition`,在按下 后退/前进 按钮时,就会像浏览器的原生表现那样:
+```
+scrollBheavior( to, from, savedPosition){
+    if (savedPosition){
+        return savedPosition
+    } else {
+        return { x:0, y:0 }
+    }
+}
+```
+
+如果你要模拟 【滚动到锚点】 的行为:
 
 ```
+scrollBehavior (to, from, savedPosition){
+    if (to.hash){
+        return {
+            selector: to.hash
+        }
+    }
+}
+```
+ 我们还可以利用[路由元信息]()更细颗粒度地控制滚动,[完整例子](https://github.com/vuejs/vue-router/blob/next/examples/scroll-behavior/app.js)
+ 
+ 
+ ### 路由懒加载
+ 
+ 当打包构建应用时, JavaScript 包会变得非常大,影响页面加载. 如果我们能把不同路由对应的组件分割成不同的代码块,然后当路由被访问的进修才加载对应组件,这样就更加高效了
+ 
+ 结合Vue的 [异步组件](https://cn.vuejs.org/v2/guide/components.html#异步组件) 和 Webpack 的 [代码分割功能](https://doc.webpack-china.org/guides/code-splitting),轻松实现路由组件的懒加载.
+ 
+ 首先,可以将异步组件定义为返回一个 Promise 的工厂函数 (该函数返回的 Promise 应该 resolve组件本身):
+ ```
+ cosnt Foo = () => Promise.resolve({ /* 组件定义对象 */ })
+ ```
+ 
+ 第二,在Webpack2 中,我们可以使用[动态 import](https://github.com/tc39/proposal-dynamic-import)语法来定义代码分块点(split point);
+ 
+ ```
+ import('./Foo.vue') // 返回 Promise
+ ```
+ 
+ 注意:如果您使用的是 Babel ,你将需要添加 [syntax-dynamic-import](https://babeljs.io/docs/plugins/syntax-dynamic-import/)插件, 才能使 Babel 可以正确地解析语法.
+
+结合这两都,这就是如何定义一个能够被 webpack 自动代码分割的异步组件.
+
+```
+const Foo = () => import('./Foo.vue')
+```
+
+在路由配置中什么都不需要改变,只需要像往常一样使用 Foo:
+
+```
+const router = new VueRouter({
+    routes: [
+        { path: '/foo', component: Foo }
+    ]
+})
+```
+
+### 把组件按组分块
+
+有时候我们想把某个路由下的所有组件都打包在同个异步块(chunk)中.只需要使用 [命名chunk](https://webpack.js.org/guides/code-splitting-require/#chunkname),一个特殊的注释语法来提供 chunk name (需要 Webpack>2.4)
+
+```
+const Foo = () => import(/* webpackChunkNmae: "group-foo" */ ./Foo.vue')
+const Bar = () => import(/* webpackChunkNmae: "group-foo" */ ./Bar.vue')
+const Baz = () => import(/* webpackChunkNmae: "group-foo" */ ./Baz.vue')
+```
+Webpack 会将任何一个异步模块与相同的块名称组合到相同的异步块中.
