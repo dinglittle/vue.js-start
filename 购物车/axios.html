@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>axios</title>
+</head>
+<body>
+	<div id="app">
+		<input  type="number" v-model.number="price" name="">
+		
+		<div>
+			<input type="number" v-model.number="price1">
+			<br>
+			{{price1 | toFixed(3)}}
+		</div>
+		<p>购物车</p>
+		<table>
+			<tr>
+				<th>
+					全选
+					<!-- click 点击时，checkbox的状态还没有改变，所以拿到的总是相反的 -->
+					<input type="checkbox" v-model="checkAll" @change="change">
+				</th>
+				<th>商品</th>
+				<th>单价</th>
+				<th>数量</th>
+				<th>小计</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="(product,index) in products">
+				<td>
+					<!-- 选中 -->
+					<!-- click 点击时，checkbox的状态还没有改变，所以拿到的总是相反的 ,change 可以保证，只当值变化后再触发函数-->
+					<input type="checkbox" v-model="product.isSelected" @change="checkOne">
+				</td>
+				<td>
+					<!-- : 和 v-bind 等价 指令：动态绑定数据 -->
+					<img :src="product.productCover" :title="product.productName">				
+					{{product.info}}
+				</td>
+				<td>
+					{{product.name}}
+				</td>
+				<td>
+					<!-- 
+						.number 是让输入框的值变成数字类型
+						.lazy 当输入框失去调动是更新数据
+					-->
+					<input type="number" v-model.number="product.count" min="1">
+				</td>
+				<td>
+					<!-- 过滤器， 原数据不变， 只是改变显示的效果 管道符 -->
+					{{product.count*product.price | toFixed(2)}}
+				</td>
+				<td>
+					<button class="btn btn-danger" @click="remove(product)">删除</button>
+				</td>
+			</tr>
+			<tr>
+				<td>总价：</td>
+				<!-- {{sum}} 数据一变化就会重新调用函数，算出最新结果-->
+				<td>{{sum()|toFixed(2)}}</td>
+			</tr>
+		</table>
+	</div>
+
+	<script src="./node_modules/vue/dist/vue.js"></script>
+	<!-- 基于 promise 的 -->
+	<script src="./node_modules/axios/dist/axios.js"></script>
+	<script>
+
+		// Vue.filter('toFixed',function(input,param){
+		// 	return input.toFixed(param)
+		// })
+		let vm = new Vue({
+			el:'#app',
+			filters:{// 可以有好多的自定义过滤器
+				// 过滤器 原数据不变，只改变展示的 
+				toFixed(input,param){// 这里的 this window
+					return '$' + input.toFixed(param)
+				}
+			},
+			// 专门用来发送 Ajax 的方法
+			created(){// 在数据初始化后会调用，this指向指的也是vm实例，钩子函数, promise 解决回调问题
+				// 
+				console.log(this.products);
+				axios.get("cars.json").then(res=>{ // success
+					console.log('success');
+					this.products = res.data;
+					// 数据获取完成 判断
+					this.checkOne();
+				},
+				err=>{ // error
+					console.log('error');
+				})
+			},
+			// mounted:{
+			// 	// 当 默认为 true 时， 页面加载 判断 
+			// 	this.checkOne();
+			// },
+			methods:{
+				// remove:function(p){
+				// 	// 当前点击的这一项
+				// 	console.log('remove');
+				// 	// 不等就删掉 ， 留下等的
+				// 	this.products = this.products.filter(item=>item!==p)
+				// },
+				change(){
+					// 根据当前自己的状态，设置其他人的状态，实现全选和反选
+					// alert('change')
+					this.products.forEach(item=>{
+						item.isSelected = this.checkAll;
+					})
+				},
+				checkOne(){
+					// 实现反选,根据下面点击的结果，改变上面的选择
+					// every 找 false, 找到就停止返回  false
+					// 判断全选的时候 遍历所有的 select ， 有一个为假就返回， 假
+					this.checkAll = this.products.every(item=> item.isSelected )
+				},
+				sum(){// 求和函数
+	
+					// return 100
+					// return this.products.reduce(function(prev,next){
+						// return prev + next.price * next.count
+					// },0)
+					return this.products.reduce((prev,next)=>{
+						// console.log(prev,next.price,next.count)
+						// console.log(typeof next.price , typeof next.count)
+						// console.log(next.price * next.count)
+						// 如果当前没被选中，返回上次的结果
+						if(!next.isSelected) return prev
+						return prev + next.price * next.count;
+					},0)
+				}
+
+
+			},
+			computed:{
+
+			},
+			data:{
+				products:[],
+				price:0,
+				price1:100,
+				checkAll:false
+			},
+			computed:{// 放在 computed 中UI周也会放在 vm上，不能喝 methods 与 data 重名
+				get(){// get 和 set this 指向实例， 默认 v-model 会获取 checkAll 的值， 所以会调用get 方法
+					 return this.products.every(p=>p.isSelected);
+					// every 碰到假就返回， 否则返回真， 
+					// 判断全选的时候， 遍历所有控件，有一个为假就返回， 否则 最后返回真
+
+				},
+				set(){
+
+				}
+
+			}
+
+		})
+	</script>
+</body>
+</html>

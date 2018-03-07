@@ -1,0 +1,18 @@
+[
+	{
+		"info":"product1",
+		"isSelected":false,
+		"name":"name1",
+		"price":100,
+		"count":1,
+		"detail":"details"
+	},
+	{
+		"info":"product2",
+		"isSelected":true,
+		"name":"name2",
+		"count":2,
+		"price":100,
+		"detail":"details"
+	}
+]
