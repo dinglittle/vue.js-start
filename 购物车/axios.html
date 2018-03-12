@@ -18,7 +18,8 @@
 				<th>
 					全选
 					<!-- click 点击时，checkbox的状态还没有改变，所以拿到的总是相反的 -->
-					<input type="checkbox" v-model="checkAll" @change="change">
+					<input type="checkbox" v-model="checkAll" >
+					<!-- @change="change" -->
 				</th>
 				<th>商品</th>
 				<th>单价</th>
@@ -30,7 +31,7 @@
 				<td>
 					<!-- 选中 -->
 					<!-- click 点击时，checkbox的状态还没有改变，所以拿到的总是相反的 ,change 可以保证，只当值变化后再触发函数-->
-					<input type="checkbox" v-model="product.isSelected" @change="checkOne">
+					<input type="checkbox" v-model="product.isSelected" >
 				</td>
 				<td>
 					<!-- : 和 v-bind 等价 指令：动态绑定数据 -->
@@ -87,7 +88,7 @@
 					console.log('success');
 					this.products = res.data;
 					// 数据获取完成 判断
-					this.checkOne();
+					// this.checkOne();
 				},
 				err=>{ // error
 					console.log('error');
@@ -104,19 +105,19 @@
 				// 	// 不等就删掉 ， 留下等的
 				// 	this.products = this.products.filter(item=>item!==p)
 				// },
-				change(){
-					// 根据当前自己的状态，设置其他人的状态，实现全选和反选
-					// alert('change')
-					this.products.forEach(item=>{
-						item.isSelected = this.checkAll;
-					})
-				},
-				checkOne(){
-					// 实现反选,根据下面点击的结果，改变上面的选择
-					// every 找 false, 找到就停止返回  false
-					// 判断全选的时候 遍历所有的 select ， 有一个为假就返回， 假
-					this.checkAll = this.products.every(item=> item.isSelected )
-				},
+				// change(){
+				// 	// 根据当前自己的状态，设置其他人的状态，实现全选和反选
+				// 	// alert('change')
+				// 	this.products.forEach(item=>{
+				// 		item.isSelected = this.checkAll;
+				// 	})
+				// },
+				// checkOne(){
+				// 	// 实现反选,根据下面点击的结果，改变上面的选择
+				// 	// every 找 false, 找到就停止返回  false
+				// 	// 判断全选的时候 遍历所有的 select ， 有一个为假就返回， 假
+				// 	this.checkAll = this.products.every(item=> item.isSelected )
+				// },
 				sum(){// 求和函数
 	
 					// return 100
@@ -136,25 +137,31 @@
 
 			},
 			computed:{
+				// 计算属性，当全选赋值时，要影响其他人的变化， 当页面刷新时， 获取全职，是根据下面的 checkbox 计算出来的结果给全选赋值
+				// 放在 computed 中UI周也会放在 vm上，不能和 methods 与 data 重名
+				checkAll:{
+					// 当 products 值变化是 会重新计算
+					get(){// get 和 set 中 this 指向实例
+						// every 有一个为 false 就 返回 false
+						// 默认 v-model 会获取 checkAll 的值， 所以会调用 get 方法
+						// get 和 set this 指向实例， 默认 v-model 会获取 checkAll 的值， 所以会调用get 方法
+						// every 碰到假就返回， 否则返回真， 
+						// 判断全选的时候， 遍历所有控件，有一个为假就返回， 否则 最后返回真
+						return this.products.every(p=>p.isSelected)
+					},
+					set(val){// 当我们给 checkbox 赋值的时候
+						console.log('checkAll==',this.checkAll)
+						this.products.forEach(p=>p.isSelected = val)
 
+					}
+				}
 			},
 			data:{
 				products:[],
 				price:0,
 				price1:100,
-				checkAll:false
-			},
-			computed:{// 放在 computed 中UI周也会放在 vm上，不能喝 methods 与 data 重名
-				get(){// get 和 set this 指向实例， 默认 v-model 会获取 checkAll 的值， 所以会调用get 方法
-					 return this.products.every(p=>p.isSelected);
-					// every 碰到假就返回， 否则返回真， 
-					// 判断全选的时候， 遍历所有控件，有一个为假就返回， 否则 最后返回真
-
-				},
-				set(){
-
-				}
-
+				// computed 不能定义
+				// checkAll:false
 			}
 
 		})
