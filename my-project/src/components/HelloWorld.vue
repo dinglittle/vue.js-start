@@ -80,7 +80,14 @@
         </a>
       </li>
     </ul>
-    <el-select></el-select>
+    <el-select v-model="value1" multiple placeholder='请选择'>
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
+    </el-select>
 
   </div>
 </template>
@@ -90,7 +97,36 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      // el-select 多选数据
+      options:[
+        {
+          value:'选项1',
+          label:'黄金糕'
+        },
+        {
+          value:'选项2',
+          label:'黄金糕黄金糕黄金糕黄金糕黄金糕黄金糕黄金糕'
+        },
+        {
+          value:'选项3',
+          label:'黄金糕3'
+        },
+        {
+          value:'选项4',
+          label:'黄金糕4'
+        },
+        {
+          value:'选项5',
+          label:'黄金5'
+        },
+        {
+          value:'选项6',
+          label:'黄金糕6'
+        }
+      ],
+      value1:[],// 多选绑定的数据
+      value2:[]
     }
   }
 }
