@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vue生命周期分析</title>
+</head>
+<body>
+	<div id="app">
+		{{msg}}
+		<button v-on:click="changeMsg">更新</button>
+		<button @click="changeMsg">更新</button>
+	</div>
+	<!-- vue 生命周期 -->
+	<!-- 
+		钩子:
+			beforeCreate 	创建前
+				el: undefined
+				data: undefined
+
+			created 		创建
+				el: undefined
+				data: 123
+
+			beforeMount		挂载前
+				el: <div id="app">...</div>
+				data: 123
+
+			mounted 		挂载后
+				el: <div id="app">...</div>
+				data: 123
+
+			beforeUpdate	更新前
+			updated			更新
+
+			beforeDestory	实例销毁前
+				el:	<div id="app">...</div>
+				data:	123
+
+			destroyed		实例销毁
+				el:	123
+				data:	<div id="app">...</div>
+	 -->
+	<script src="./vue.js"></script>
+	
+	<script>
+		// 创建实例
+		var app = new Vue({
+			el:'#app',
+			data:{
+				msg:'123'
+			},
+			beforeCreate:function(){
+				// 创建前 $el data 都为 undefined
+				console.log('====beforeCreate====创建前')
+				console.log(this.data)// undefined
+				console.log(this.$el)// undefined 
+			},
+			created:function(){
+				// 创建后  可以拿到 data 值, 但 $el 依旧为 undefined
+				console.log('====created====创建后');
+				console.log(this.msg)//	123
+				console.log(this.$el)// undefined
+			},
+			beforeMount:function(){
+				// 挂载前 , $el 的值为 虚拟的元素节点 
+				console.log('====beforeMount====挂载前');
+				console.log(this.msg)// 123
+				console.log(this.$el)// <div id="app">...</div>
+			},
+			mounted:function(){
+				// mount 后, mounted 之前, 虚拟的 dom 节点被真实的 dom 节点替换, 并将其插入到 dom 树中 , 于是在触发 mounted 是, 可以获取到 $el 为真实的 dom 元素()
+				// app =.$el === document.getElementById("app")  // true
+				console.log('====mounted====挂载');
+				console.log(this.msg)//	123
+				console.log(this.$el)// <div id="app">...</div>
+			},
+			beforeUpdate:function(){
+				console.log('====beforeUpdate====更新前');
+			},
+			updated:function(){
+				console.log('====updated====更新后')
+			},
+			// 手动触发 销毁
+			// app.$destroy()
+			// 销毁前 el data 都在
+			beforeDestroy:function(){
+				console.log('====beforeDestory====销毁前');
+				console.log(this.msg)// 123
+				console.log(this.$el)// <div id="app">...</div>
+			},
+			// 销毁后  $el msg 依然存在
+			destroyed:function(){
+				console.log('====destroyed====销毁后')
+				console.log(this.msg)// 123
+				console.log(this.$el)// <div id="app">...</div>
+			},
+			methods:{
+				changeMsg:function(e){
+					console.log(e);
+					this.msg = 'changeMsg'
+				}
+			}
+		})
+		
+	</script>
+</body>
+</html>

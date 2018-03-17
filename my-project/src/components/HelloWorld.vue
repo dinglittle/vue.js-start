@@ -80,9 +80,20 @@
         </a>
       </li>
     </ul>
+    <p>多选 子原因</p>
     <el-select v-model="value1" multiple placeholder='请选择'>
       <el-option
         v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+    <p>单选 子原因</p>
+    <!-- 单选 子原因 -->
+    <el-select v-model="reason">
+      <el-option
+        v-for="item in reasons"
         :key="item.value"
         :label="item.label"
         :value="item.value"
@@ -126,8 +137,31 @@ export default {
         }
       ],
       value1:[],// 多选绑定的数据
-      value2:[]
+      value2:[],
+      // 原因
+      reasons:[
+        {
+          value:1,
+          label:'原因1'
+        },
+        {
+          value:2,
+          label:'原因2'
+        },
+        {
+          value:3,
+          label:'原因3'
+        }
+      ],
+      reason:'', // 绑定的原因
     }
+  },
+  mounted(){
+    setTimeout(function(){
+      this.reason = 2
+    },5000)
+
+    // setTimeout(()=this.reason=3)
   }
 }
 </script>
