@@ -8,6 +8,9 @@
 		{{msg}}
 		<button v-on:click="changeMsg">更新</button>
 		<button @click="changeMsg">更新</button>
+
+		<input type="" v-model="searchkey" @keyup.enter="get($event)">
+		<p v-show="listData.length == 0">暂无数据...</p>
 	</div>
 	<!-- vue 生命周期 -->
 	<!-- 
@@ -46,7 +49,9 @@
 		var app = new Vue({
 			el:'#app',
 			data:{
-				msg:'123'
+				msg:'123',
+				searchkey:'',
+				listData:[]
 			},
 			beforeCreate:function(){
 				// 创建前 $el data 都为 undefined
@@ -97,6 +102,19 @@
 				changeMsg:function(e){
 					console.log(e);
 					this.msg = 'changeMsg'
+				},
+				get:function(){
+					this.$http.jsonp('https://sp0.baidu.com',{
+						params:{
+							wd:this.searchkey // 输入的关键字
+						},
+						jsonp:'cb', // 回调函数
+					}).then(function(res){ // 请求成功回到, 请求来的书赋给 listData 值
+						this.listData = res.bdy.s;
+						alert(this.listData)
+					},function(){
+						alert('出错了')
+					})
 				}
 			}
 		})
