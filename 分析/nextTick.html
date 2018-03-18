@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>$nextTick</title>
+	<script src="./vue.js"></script>
+</head>
+<body>
+	<!-- 
+		$nextTick 
+			在使用 v-if 来控制页面显示
+			点击按钮 显示内容，这个时候 div 获取不到，因为 v-if 并没有创建 dom 
+	 -->
+	<div id="app">
+		<p>$nextTick</p>
+		<div id="div" v-if="isShow">我是 v-if 控制的 div </div>
+		<button @click="btnClick">{{btnTitle}}</button>
+		<br>
+		<p>v-if控制</p>
+		<div id="div" v-if="isShow2">我是 v-if 控制的 div 2</div>
+		<button @click="btnClick2">{{btnTitle2}}</button>
+	</div>
+	<script>
+		var app = new Vue({
+			el:'#app',
+			data:{
+				msg:123,
+				btnTitle:'显示',
+				btnTitle2:'显示',
+				isShow:false,
+				isShow2:false
+			},
+			methods:{
+				btnClick:function(){
+					this.isShow = true;
+					// this.isShow?this.btnTitle = '隐藏':this.btnTitle = '显示';
+					// 直接去取值会报错 
+					// Uncaught TypeError: Cannot read property 'innerHTML' of null
+
+					// 异步更新队列
+					// Vue 在观察到数据变化时并不是直接更新 Dom ， 而是开启一个队列， 并缓冲在同一事件循环中发生的所有数据改变。 在缓冲时会去除重复数据， 从而避免不必要的计算和 DOM 操作。 
+					// 然后在下一个事件循环 tick 中， Vue 刷新队列并执行实际（已去重的）工作，
+					// 所以，如果用for循环来动态改变数据 100次，其实只应用最后一次的， 如果没有这种机制， DOM就要重绘 100次,固然是很大的开销
+					this.$nextTick(function(){
+						var text = document.getElementById('div').innerHTML;
+						console.log(text);
+					})
+				},
+				btnClick2:function(){
+					this.isShow2 = !this.isShow2;
+					this.isShow2?this.btnTitle2='隐藏':this.btnTitle2='显示';
+				}
+			}
+		})
+	</script>
+</body>
+</html>

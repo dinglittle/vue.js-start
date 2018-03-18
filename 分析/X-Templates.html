@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>X-Templates</title>
+</head>
+<body>
+	<script src="./vue.js"></script>
+	<div id="app">
+		<my-component></my-component>
+	</div>
+	<script type="text/x-template" id="my-component">
+		<div>这是组件的内容</div>
+	</script>
+	<script>
+		/*
+			X-Template
+			假如组价的 temaplate 的内容冗长，复杂，如果都要在 JavaScript 中拼接， 效率低， 因为不能像 HTML 那样舒服
+			Vue 提供了另一种模板的方式， 在 <script> 标签里使用 text/x-template 类型， 并且制定一个 id， 将这个id赋给 template
+
+		*/
+		// Vue.component('my-component',{
+		// 	template:'#my-component'
+		// })
+		var app = new Vue({
+			el:'#app',
+			data:{
+				msg: 123
+			},
+			components:{
+				myComponent:{
+					template:'#my-component'
+				}
+			}
+		})
+
+	</script>
+</body>
+</html>
