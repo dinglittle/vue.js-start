@@ -88,16 +88,23 @@
     </ul>
   </div>
 </template>
+<!-- X-Template 为了方便 组件 template 在js中拼接 -->
+<script type="text/X-Template" id="counter2"></script>
 
 <script>
 import Vue from 'vue'
 import Vuex from 'vuex'
+// 单一个组件需要获取多个状态时候,将这此状态都声明为计算属性会有些重复和冗余,可以使用 mpaState 辅助函数帮助我们生成计算属性,让你少按几次键
 // 在单独构建的版本中辅助函数为 Vuex.mapState
 import { mapState } from 'vuex'
 Vue.use(Vuex)
+// 通过 store 选项,提供了一种机制将状态从根组件 "注入" 到第一个子组件中(需要调用  Vue.use(Vuex) );
+// 如果在模块化构建系统中,请确保开头调用了 Vue.use(Vuex)
 const store = new Vuex.Store({
   state:{
-    count:0
+    count:0,
+    countAlias:0,
+    countPlusLocalState:0
   },
   mutations:{
     increment(state){
@@ -105,6 +112,8 @@ const store = new Vuex.Store({
     }
   }
 })
+// Counter 组件
+// 通过在根实例中注册 store 选项, 该 store 实例会注入到根组件下的所有子组件中,且子组件能通过 this.$store 访问到.
 const Counter = {
   template:'<div>{{ count }}</div>',
   computed: {
@@ -121,12 +130,14 @@ export default {
     }
   },
   mounted(){
-    // store.commit('increment');
+    // store.commit('increment'); // 调用 Conter 组件 increment 方法
     // console.log('vuex-store.state.count',store.state.count)  // 1
     
   },
   components: { Counter },
   // mapState 辅助函数
+  // 当一个组件需要获取多个状态时候, 将这些状态都声明为计算属性会有些重复和冗余.
+  // 为了解决这个问题, 我们可以使用 mapState 辅助函数帮助我们生成计算属性
   computed: mapState({
     // 箭头函数可使代码更简洁
     count: state => state.count,
