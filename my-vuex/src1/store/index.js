@@ -8,7 +8,7 @@ const state = {count:0};
 import mutations from './mutations'
 export default new Vuex.Store({
 	state,
-	mutations,
+	mutations, 
 	plugins:[logger()],
 	strict:true // 只能通过 mutation(管理员) 来更改状态,mutation 不支持异步
 });
