@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Vue.js 学习之路 
 
 一) [Vue.js 基本语法](https://cn.vuejs.org/v2/guide/)
@@ -84,3 +85,9 @@ http://router.vuejs.org/zh-cn/index.html vue-router2.0中文文档
 http://vuex.vuejs.org/en/index.html vuex2.0 英文文档
 
 https://github.com/bhnddowinf/vuejs2-learn v2学习项目
+=======
+# vue.js-start
+Vue.js 学习之路 
+
+一夜回到解放前,强推了.....
+>>>>>>> 2a59488ca8fa7fac883fb74a28aa595c2b68c8c5
