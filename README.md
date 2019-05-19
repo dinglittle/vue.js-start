@@ -1,3 +1,18 @@
+# git 解决办法
+## git 100个问题解决办法
+https://lindexi.gitee.io/post/git-%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%841000%E4%B8%AA%E9%97%AE%E9%A2%98.html
+
+### 解决两个不同的仓库无法合并的问题
+https://lindexi.oschina.io/lindexi/post/git%E6%97%A0%E6%B3%95pull%E4%BB%93%E5%BA%93refusing-to-merge-unrelated-histories.html
+```
+fatal: refusing to merge unrelated histories
+```
+由于两个仓库没有相同节点的分支，如果需要合并两不同节点的分支，需要在 `git pull` 添加一句代码 `--allow-unrelated-histories` 
+```
+git pull origin master --allow-unrelated-histories
+```
+
+
 # Vue.js 学习之路 
 
 一) [Vue.js 基本语法](https://cn.vuejs.org/v2/guide/)

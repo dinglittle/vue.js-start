@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>组件refs</title>
+    <script src="./vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <component-a title="组件1"></component-a>
+        <component-b :title="title"></component-b>
+        <base-checkbox v-model="lovingVue"></base-checkbox>
+    </div>
+    <script>
+  //   Vue.component('base-checkbox', {
+  //       model: {
+  //           prop: 'checked',
+  //           event: 'change'
+  //       },
+  //       props: {
+  //           checked: Boolean
+  //       },
+  //       template: `
+  //   <input
+  //     type="checkbox"
+  //     v-bind:checked="checked"
+  //     v-on:change="$emit('change', $event.target.checked)"
+  //   >
+  // `
+  //   })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            name: 'component-refs',
+            title: '组件2',
+            lovingVue: false
+        },
+        components: {
+            'component-a': {
+                template: '<div>{{title}}</div>',
+                props: ['title'],
+                mounted() {
+                    console.log('component-a mount');
+                }
+            },
+            'component-b': {
+                template: '<div>{{title}}</div>',
+                props: ['title'],
+                mounted() {
+                    console.log('component-b mount');
+                }
+            },
+            'base-checkbox': {
+                model: {
+                    prop: 'checked',
+                    event: 'change'
+                },
+                template: `
+                	<input 
+						type="checkbox" 
+						v-bind:checked="checked" 
+						v-on:change="$emit('change',$event.target.checked)">
+						`,
+                props: {
+                    // 默认 Boolean 类型
+                    checked: Boolean
+                },
+
+
+            }
+
+        }
+    })
+    </script>
+</body>
+
+</html>

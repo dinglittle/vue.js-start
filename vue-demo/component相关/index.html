@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>component - 局部 使用</title>
+	<script src="../vue.js"></script>
+	<style>
+		[v-cloak]{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div>{{msg}}</div>
+		<component-a>000</component-a>
+	</div>
+	<script>
+		window.onload = function(){
+
+			let vm = new Vue({
+				el:'#app',
+				data(){
+					return{
+					msg:123					
+					}
+				},
+				components:{
+					'component-a':{
+						template:`<div>{{msgA}}</div>`,
+						props:{
+							msgA:{
+								type:String,
+								default:'componentA'
+							}
+						}
+					}
+				}
+			})
+		}
+
+	</script>
+</body>
+</html>
