@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # git 解决办法
 ## git 100个问题解决办法
 https://lindexi.gitee.io/post/git-%E9%9C%80%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%841000%E4%B8%AA%E9%97%AE%E9%A2%98.html
@@ -13,6 +14,9 @@ git pull origin master --allow-unrelated-histories
 ```
 
 
+=======
+<<<<<<< HEAD
+>>>>>>> 45cf541f2ef0bccd4621f8908c0e7f6673052655
 # Vue.js 学习之路 
 
 一) [Vue.js 基本语法](https://cn.vuejs.org/v2/guide/)
@@ -99,3 +103,9 @@ http://router.vuejs.org/zh-cn/index.html vue-router2.0中文文档
 http://vuex.vuejs.org/en/index.html vuex2.0 英文文档
 
 https://github.com/bhnddowinf/vuejs2-learn v2学习项目
+=======
+# vue.js-start
+Vue.js 学习之路 
+
+一夜回到解放前,强推了.....
+>>>>>>> 2a59488ca8fa7fac883fb74a28aa595c2b68c8c5

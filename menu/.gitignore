@@ -1,5 +1,5 @@
 .DS_Store
-*/node_modules
+node_modules
 /dist
 
 # local env files
@@ -18,8 +18,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-<<<<<<< HEAD
-*.sw?
-=======
 *.sw*
->>>>>>> 45cf541f2ef0bccd4621f8908c0e7f6673052655

@@ -9,7 +9,6 @@
     <h3>Installed CLI Plugins</h3>
     <ul>
       <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
     </ul>
     <h3>Essential Links</h3>
     <ul>
@@ -31,35 +30,16 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import axios from 'axios'
-=======
->>>>>>> 45cf541f2ef0bccd4621f8908c0e7f6673052655
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
-<<<<<<< HEAD
-  },
-  mounted(){
-    this.postList()
-  },
-  methods:{
-    postList(){
-      axios.post('localhost:3000/postList',{
-        status:'0'
-      }).then(res=>{
-        console.log('res',res)
-      })
-    }
-=======
->>>>>>> 45cf541f2ef0bccd4621f8908c0e7f6673052655
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="less">
 h3 {
   margin: 40px 0 0;
 }
