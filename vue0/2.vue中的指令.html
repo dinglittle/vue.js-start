@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./node_modules/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- v-for 指令: v-开头 有特定功能 操作 dom 元素 -->
+	<!-- 数据都需要循环来操作 {}  -->
+	<!-- vue 2.5+ 版本要求 循环的时候，必须增加 key属性，伪类 domdiff -->
+	<!-- v-bind 是动态绑定属性 所有的额指令 中的值 都是我们的遍历 如果要是字符串 需要加双引号 -->
+	<!-- template vue自带的标签 无意义的标签  template 不能增加 key 属性，需要给真实的元素添加 Key-->
+	<!-- v-if/ v-else / v-show -->
+	<div id="app">
+		<template v-for="(i,key) in arr" >
+			<!-- 多个元素 需要区分名称 而且可以使用模板字符串 -->
+			<li :key=`${key}_1` :a=`${key}_1`>{{i}}-{{key}}</li>
+			<li :key="key" :a="key">{{i}}-{{key}}</li>
+			<li :key="key+new Date()" :a="key+new Date()">{{i}}-{{key}}</li>
+		</template>
+
+		<template v-for="(value,key) in {a:1}">
+			<li>
+				{{value}}-{{key}}
+			</li>
+		</template>
+		<!-- 循环5次 -->
+		<template v-for="(value,key) in 5">
+			<div>1</div>
+		</template>
+
+		<!-- 尽量不要给动态的数据 不要用 key 来渲染，导致浪费性能 -->
+	<!-- 	<li>apple</li>
+		<li>orange</li>
+		<li>other</li> -->
+
+		<template v-if="flag">
+			false
+		</template>
+		<template v-else>
+			else
+		</template>
+
+		<!-- 
+			v-if / v-show
+			v-if 处理 dom 是否增加到页面上
+			v-show style 的操作， 不支持 template写法
+		 -->
+
+		<button v-on:click="()=>{flag=!flag}">切换</button>
+		<button @click="fn($event)">切换2</button>
+
+		<div v-if="flag">
+			<label for="">lh</label>
+			<input type="text" key="1">
+		</div>
+		<div v-else="!flag">
+			<label for="">lwj</label>
+			<input type="text" key="2">
+		</div>
+		<button @click="chang">切换输入</button>
+
+		<!-- 只渲染一次 ， 但会有缓存，下次更新会直接从缓存取 ， 可以有效防止重新渲染 -->
+		<!-- 这里的页面展示不会变 -->
+		<div v-once>{{flag}}</div>
+
+		<input type="text" :value="element" @input="(e)=>{element=e.target.value}">
+		<!-- 
+			语法糖：
+			@input="(e)=>{element.traget.value}"
+			v-model="element"
+		 -->
+		<input type="text" v-model="element">
+		<div v-html="element"></div>
+	</div>
+	<script>
+		// 所有的额数据 都会合并到 vm 实力上，但是会被 data 覆盖，所以不要重名
+		let vm = new Vue({
+			el:'#app',
+			data:{
+				flag:true,
+				arr:[1,2,3],
+				element:'<h1>hello</h1>'
+			},
+			methods:{
+				fn(e){
+					console.log(e)
+					this.flag = !this.flag
+				},
+				chang(){
+					this.flag = !this.flag
+				}
+			}
+		})
+	</script>
+</body>
+</html>

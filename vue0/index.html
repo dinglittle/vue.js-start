@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">{{msg}}</div>
+	<script src="./node_modules/vue/dist/vue.js"></script>
+	<script>
+		let vm = new Vue({
+			data:{
+				msg:123
+			},
+			el:'#app'
+			// vue 2.0 实现数据响应式变化  Object.defineProerty 不支持数组
+		})
+	</script>
+</body>
+</html>
