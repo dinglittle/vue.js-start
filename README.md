@@ -112,3 +112,5 @@ git pull origin master --allow-unrelated-histories
 - 基础配置
 - vue-slider 滑块组件使用
   https://nightcatsama.github.io/vue-slider-component/#/zh-CN/
+
+- vue-quill-editor 富文本编辑器使用
