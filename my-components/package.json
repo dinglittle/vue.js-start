@@ -11,6 +11,7 @@
     "core-js": "^2.6.5",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.10",
+    "vue-quill-editor": "^3.0.6",
     "vue-slider-component": "^3.0.38"
   },
   "devDependencies": {

@@ -2,9 +2,9 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <MySlider ref="mySlider"></MySlider>
+    <MySlider ref="mySlider" v-show="sliderShow"></MySlider>
 
-    <div class="my-slider">
+    <div class="my-slider" v-show="sliderShow">
       <!-- <vue-slider v-model="value" /> -->
 
       <vue-slider
@@ -27,10 +27,13 @@
         @dragging="updateLevel(val)"
         v-show="!isSliderDisable"
       ></vue-slider>-->
+      <div>
+        <span class="btn" @click="changeDisable">切换禁用</span>
+      </div>
     </div>
-
-    <div>
-      <span class="btn" @click="changeDisable">切换禁用</span>
+    <div v-show="editorShow">
+      <p>富文本</p>
+      <my-editor></my-editor>
     </div>
   </div>
 </template>
@@ -38,6 +41,7 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import MySlider from './components/MySlider.vue'
+import MyEditor from './components/MyEditor.vue'
 
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
@@ -47,10 +51,12 @@ export default {
   components: {
     HelloWorld,
     MySlider,
-    VueSlider
+    VueSlider, MyEditor
   },
   data () {
     return {
+      sliderShow: false,
+      editorShow: true,
       isSliderDisable: true,
       value: '低',
       data: ['低', '中', '高']
