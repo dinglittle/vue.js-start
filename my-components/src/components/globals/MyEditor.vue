@@ -34,7 +34,7 @@ export default {
         // , { 'header': [4, 5, 6, false] }
         modules: {
           toolbar: [
-            ['bold', 'italic', { 'size': ['small', false, 'large'] }],        // toggled buttons
+            ['bold', { 'color': [] }, 'italic', { 'size': ['small', false, 'large'] }],        // toggled buttons
           ]
         }
       }

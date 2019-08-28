@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
     <MySlider ref="mySlider" v-show="sliderShow"></MySlider>
 
     <div class="my-slider" v-show="sliderShow">
@@ -40,8 +40,8 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import MySlider from './components/MySlider.vue'
-import MyEditor from './components/MyEditor.vue'
+// import MySlider from './components/MySlider.vue'
+// import MyEditor from './components/MyEditor.vue'
 
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
@@ -50,8 +50,7 @@ export default {
   name: 'app',
   components: {
     HelloWorld,
-    MySlider,
-    VueSlider, MyEditor
+    VueSlider
   },
   data () {
     return {

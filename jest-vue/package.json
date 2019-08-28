@@ -8,10 +8,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-<<<<<<< HEAD
     "axios": "^0.18.0",
-=======
->>>>>>> 45cf541f2ef0bccd4621f8908c0e7f6673052655
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
